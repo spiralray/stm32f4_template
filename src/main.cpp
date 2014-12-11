@@ -45,11 +45,11 @@ int main(void)
   MillisecondTimer::initialise();
   Nvic::initialise();
 
+  machine = new Machine();	//You must call before initialization of NodeHandle
+
   nh = new ros::NodeHandle();
 
   MillisecondTimer::delay(100);
-
-  machine = new Machine();
 
   std_msgs::Int32 encoder1_msg;
   encoder1_msg.data = 0;
@@ -58,9 +58,6 @@ int main(void)
   nh->initNode();
   nh->advertise(encoder1);
   nh->subscribe(subMotor1);
-
-  //Nvic::configureIrq(USART2_IRQn,ENABLE,0,0);
-  //Nvic::configureIrq(TIMER7_IRQn,ENABLE,2,0);
 
   while(1){
       encoder1_msg.data = machine->motorA.Encoder::getLocation();
