@@ -8,19 +8,29 @@
 
 #include "board/main_v3.h"
 
-#include "utils/MadgwickAHRS.h"
+#include "machine/machine.h"
+
+#include "ros.h"
+#include <std_msgs/Int32.h>
+
 
 using namespace stm32plus;
 
 /* Defines -------------------------------------------------------------------*/
 
 /* Variables -----------------------------------------------------------------*/
+ros::NodeHandle  *nh;
+Machine *machine;
 
 /* Constants -----------------------------------------------------------------*/
 
 /* Function prototypes -------------------------------------------------------*/
 
 /* Functions -----------------------------------------------------------------*/
+void motor1CallBack(const std_msgs::Int32& msg){
+  machine->setTargetLocation1(msg.data);
+}
+ros::Subscriber<std_msgs::Int32> subMotor1("motor1", &motor1CallBack);
 
 /**************************************************************************/
 /*!
@@ -31,34 +41,38 @@ using namespace stm32plus;
 /**************************************************************************/
 int main(void)
 {
-
   //Initialise Systick
   MillisecondTimer::initialise();
-
   Nvic::initialise();
+
+  nh = new ros::NodeHandle();
 
   MillisecondTimer::delay(100);
 
-  MainV3 mainBoard;
-  MadgwickAHRS ahrs;
+  machine = new Machine();
 
-  mainBoard.mpu6050.setTimeout(20);
+  std_msgs::Int32 encoder1_msg;
+  encoder1_msg.data = 0;
+  ros::Publisher encoder1("enc1", &encoder1_msg);
 
-  debug<<"Testing MPU6050...\r\n";
-  while(!mainBoard.mpu6050.test());
-  debug<<"MPU6050 test passed.\r\n";
+  nh->initNode();
+  nh->advertise(encoder1);
+  nh->subscribe(subMotor1);
 
-  debug<<"Setting up MPU6050...\r\n";
-  mainBoard.mpu6050.setup();
-  debug<<"complete.\r\n";
+  //Nvic::configureIrq(USART2_IRQn,ENABLE,0,0);
+  //Nvic::configureIrq(TIMER7_IRQn,ENABLE,2,0);
 
   while(1){
-      char str[128];
-      sprintf(str, "Gyro / Acc: %6d %6d %6d %6d %6d %6d\r\n", mainBoard.mpu6050.readGyrX(), mainBoard.mpu6050.readGyrY(), mainBoard.mpu6050.readGyrZ(), mainBoard.mpu6050.readAccX(), mainBoard.mpu6050.readAccY(), mainBoard.mpu6050.readAccZ());
-      debug << str;
-      MillisecondTimer::delay(10);
+      encoder1_msg.data = machine->motorA.Encoder::getLocation();
+      encoder1.publish( &encoder1_msg );
+      nh->spinOnce();
+      MillisecondTimer::delay(50);
+      machine->led.On();
+      MillisecondTimer::delay(50);
+      machine->led.Off();
   }
 
 }
 
 /* End Of File ---------------------------------------------------------------*/
+
