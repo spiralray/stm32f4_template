@@ -1,0 +1,35 @@
+These resources are provided under the GNU General Public Licence 
+unless an alternative licence is provided in source.
+
+===!NOTICE!===
+SpiralRay uses following INTELLECTUAL PROPERTIES under each licence.
+Those sourcecode are included in this project.
+
+--- LIBRARIES ---
+* ARM Ltd. CMSIS Standard.
+  See ./lib/CMSIS/CMSIS END USER LICENCE AGREEMENT.pdf.
+
+* STMicroelectronics CMSIS Libraries
+  STM32F4 DSP and standard peripherals library
+  http://www.st.com/software_license_agreement_liberty_v2
+
+* Nemui Trinomius's TFT/OLED Control Sample with ChaN's FatFs.
+  Berkeley Software Distribution License
+  See Copyright_Nemuisan.txt
+  http://nemuisan.blog.bai.ne.jp/?eid=192848
+
+* ChaN's FatFs and FatFs Control(e.g. xprintf()) Apprications
+  http://elm-chan.org/fsw/ff/00index_e.html
+  http://elm-chan.org/fsw/ff/en/appnote.html#license
+
+* Andrew Brown's stm32plus
+  https://github.com/andysworkshop/stm32plus
+
+* Tokoro's KabutoganiAniki Firmware
+  Copyright (c) 2014 Tokoro
+  Released under the MIT license
+  https://bitbucket.org/tokoro10g/kabutoganianiki/
+
+* Open source IMU and AHRS algorithms
+  GNU General Public Licence
+  http://www.x-io.co.uk/open-source-imu-and-ahrs-algorithms/
