@@ -16,7 +16,7 @@ protected:
   typedef UsartXInterruptFeature MyUsartInterrupt;
   USARTX _usart;
 
-  const static int UART_BUFSIZE = 1024;
+  const static int UART_BUFSIZE = 2048;
   /* @brief Receive buffer. */
   volatile uint8_t RX[UART_BUFSIZE];
   /* @brief Transmit buffer. */

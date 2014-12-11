@@ -32,6 +32,11 @@ void motor1CallBack(const std_msgs::Int32& msg){
 }
 ros::Subscriber<std_msgs::Int32> subMotor1("motor1", &motor1CallBack);
 
+void motor2CallBack(const std_msgs::Int32& msg){
+  machine->setTargetLocation2(msg.data);
+}
+ros::Subscriber<std_msgs::Int32> subMotor2("motor2", &motor2CallBack);
+
 /**************************************************************************/
 /*!
     @brief  Main Program.
@@ -51,21 +56,37 @@ int main(void)
 
   MillisecondTimer::delay(100);
 
-  std_msgs::Int32 encoder1_msg;
-  encoder1_msg.data = 0;
+  std_msgs::Int32 encoder1_msg, encoder2_msg, encoderSwing_msg;
+  encoder1_msg.data = machine->motorA.Encoder::getLocation();
+  encoder2_msg.data = machine->motorB.Encoder::getLocation();
+  encoderSwing_msg.data = machine->swing.Encoder::getLocation();
   ros::Publisher encoder1("enc1", &encoder1_msg);
+  ros::Publisher encoder2("enc2", &encoder1_msg);
+  ros::Publisher encoderSwing("encSwing", &encoderSwing_msg);
 
   nh->initNode();
   nh->advertise(encoder1);
+  nh->advertise(encoder2);
+  nh->advertise(encoderSwing);
+
   nh->subscribe(subMotor1);
+  nh->subscribe(subMotor2);
 
   while(1){
-      encoder1_msg.data = machine->motorA.Encoder::getLocation();
-      encoder1.publish( &encoder1_msg );
+	  encoder1_msg.data = machine->motorA.Encoder::getLocation();
+	  encoder1.publish( &encoder1_msg );
+
+	  encoder2_msg.data = machine->motorB.Encoder::getLocation();
+	  encoder2.publish( &encoder2_msg );
+
+	  encoderSwing_msg.data = machine->swing.Encoder::getLocation();
+	  encoderSwing.publish( &encoderSwing_msg );
+
       nh->spinOnce();
-      MillisecondTimer::delay(50);
+
+      MillisecondTimer::delay(10);
       machine->led.On();
-      MillisecondTimer::delay(50);
+      MillisecondTimer::delay(10);
       machine->led.Off();
   }
 
