@@ -283,6 +283,9 @@ namespace stm32plus {
     GpioC<DefaultDigitalOutputFeature<13> > pcled;
     Led led;
 
+    GpioD<DefaultDigitalOutputFeature<8,9,10,11> > pdleds;
+    Led led1, led2, led3, led4;
+
     GpioE<DigitalInputFeature <GPIO_Speed_50MHz,Gpio::PUPD_UP,1,2,3,4,12,13,14,15> > pe;
     Button button1;
     Button button2;
@@ -335,6 +338,10 @@ namespace stm32plus {
   public:
     MainV3() :
       led(pcled[13]),
+      led1(pdleds[8]),
+      led2(pdleds[9]),
+      led3(pdleds[10]),
+      led4(pdleds[11]),
       button1(pe[1],false),
       button2(pe[2],false),
       button3(pe[3],false),
