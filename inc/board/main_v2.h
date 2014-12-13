@@ -180,7 +180,7 @@ typedef Spi5VThird<> 	Spi5V3;
 class MainV2 {
   public:
 
-    GpioB<DigitalOutputFeature< GPIO_Speed_50MHz, GPIO_OType_OD, Gpio::PUPD_NONE, 0> > pb_od;
+	GpioB<DigitalOutputFeature< GPIO_Speed_50MHz, Gpio::OPEN_DRAIN, Gpio::PUPD_NONE, 0> > pb_od;
     Led led;
 
     Motor<
