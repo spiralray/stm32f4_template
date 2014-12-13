@@ -18,15 +18,69 @@
 					<folderInfo id="0.1886342739." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1265085748" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1265085748.1632559152" name=""/>
-							<builder id="org.eclipse.cdt.build.core.settings.default.builder.871544574" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<builder id="org.eclipse.cdt.build.core.settings.default.builder.871544574" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make ビルダー" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1944530402" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.834687214" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1297311257" name="インクルード・パス" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../../stm32plus"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/config"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio/f4"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio/f4/features"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/fwlib/f4/stdperiph/inc"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/fwlib/f4/cmsis/Device/ST/STM32F4xx/Include"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer/f4"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer/f4/features"/>
+								</option>
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1986714289" name="シンボル" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="USE_MAIN_V3"/>
+									<listOptionValue builtIn="false" value="STM32PLUS_F407"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=25000000"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1460307326" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.1224734483" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.1512939847" name="インクルード・パス" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../../stm32plus"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/config"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio/f4"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio/f4/features"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/fwlib/f4/stdperiph/inc"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/fwlib/f4/cmsis/Device/ST/STM32F4xx/Include"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer/f4"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer/f4/features"/>
+								</option>
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.813714986" name="シンボル" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="USE_MAIN_V3"/>
+									<listOptionValue builtIn="false" value="STM32PLUS_F407"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=25000000"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.184639374" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.1192243817" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.379942547" name="インクルード・パス" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
+									<listOptionValue builtIn="false" value="../../stm32plus"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/config"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio/f4"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/gpio/f4/features"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/fwlib/f4/stdperiph/inc"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/fwlib/f4/cmsis/Device/ST/STM32F4xx/Include"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer/f4"/>
+									<listOptionValue builtIn="false" value="../../stm32plus/include/timer/f4/features"/>
+								</option>
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1782410302" name="シンボル" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="USE_MAIN_V3"/>
+									<listOptionValue builtIn="false" value="STM32PLUS_F407"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=25000000"/>
+								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1218065289" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
 						</toolChain>
