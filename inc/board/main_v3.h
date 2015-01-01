@@ -251,20 +251,6 @@ namespace stm32plus {
 
   using MOTOR_C_TIMER = Timer4<
       Timer4InternalClockFeature,
-      TimerChannel1Feature<>,
-      TimerChannel2Feature<>,
-      Timer4GpioFeature<
-      TIMER_REMAP_FULL,
-      TIM4_CH1_OUT,
-      TIM4_CH2_OUT
-      >
-  >;
-  using MOTOR_C_CHA = TimerChannel1Feature<>;
-  using MOTOR_C_CHB = TimerChannel2Feature<>;
-  using MOTOR_C = Motor< MOTOR_C_TIMER, MOTOR_C_CHA, MOTOR_C_CHB >;
-
-  using MOTOR_D_TIMER = Timer4<
-      Timer4InternalClockFeature,
       TimerChannel3Feature<>,
       TimerChannel4Feature<>,
       Timer4GpioFeature<
@@ -273,8 +259,22 @@ namespace stm32plus {
       TIM4_CH4_OUT
       >
   >;
-  using MOTOR_D_CHA = TimerChannel3Feature<>;
-  using MOTOR_D_CHB = TimerChannel4Feature<>;
+  using MOTOR_C_CHA = TimerChannel3Feature<>;
+  using MOTOR_C_CHB = TimerChannel4Feature<>;
+  using MOTOR_C = Motor< MOTOR_C_TIMER, MOTOR_C_CHA, MOTOR_C_CHB >;
+
+  using MOTOR_D_TIMER = Timer4<
+      Timer4InternalClockFeature,
+      TimerChannel1Feature<>,
+      TimerChannel2Feature<>,
+      Timer4GpioFeature<
+      TIMER_REMAP_FULL,
+      TIM4_CH1_OUT,
+      TIM4_CH2_OUT
+      >
+  >;
+  using MOTOR_D_CHA = TimerChannel1Feature<>;
+  using MOTOR_D_CHB = TimerChannel2Feature<>;
   using MOTOR_D = Motor< MOTOR_D_TIMER, MOTOR_D_CHA, MOTOR_D_CHB >;
 
   class MainV3 {
