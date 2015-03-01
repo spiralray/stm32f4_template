@@ -12,7 +12,7 @@ namespace stm32plus{
 				MAX_COMPARE=500
 			};
 			Motor():TimMotor(){
-				this->setTimeBaseByFrequency(10000000, MAX_COMPARE);
+				this->setTimeBaseByFrequency(10000000, MAX_COMPARE-1);
 				ChannelA::initCompareForPwmOutput();
 				ChannelB::initCompareForPwmOutput();
 				this->enablePeripheral();
