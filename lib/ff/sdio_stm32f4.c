@@ -762,7 +762,7 @@ SD_Error SD_GetCardInfo(SD_CardInfo *cardinfo)
 
 		/*!< Byte 10 */
 		tmp = (uint8_t)((CSD_Tab[2] & 0x0000FF00) >> 8);
-		/* nemui fixed due to SD2.00 Capacity fomula is Size = (C_SIZE+1)~2^19 */
+		/* nemui fixed due to SD2.00 Capacity fomula is Size = (C_SIZE+1)ï¿½~2^19 */
 		cardinfo->CardCapacity = ((uint64_t)cardinfo->SD_csd.DeviceSize + 1) * 512 * 1024;
 		cardinfo->CardBlockSize = 512;    
 	}
@@ -3404,6 +3404,11 @@ void disk_timerproc(void)
 	else						/* INS = L (Card inserted) */
 		s &= ~STA_NODISK;
 	Stat = s;
+}
+
+uint32_t get_fattime (void)
+{
+    return 0;
 }
 
 /* End Of File ---------------------------------------------------------------*/
