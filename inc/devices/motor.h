@@ -18,9 +18,15 @@ namespace stm32plus{
 				this->enablePeripheral();
 			}
 			void setOutput(float duty){
+			  if(duty > 1.0f){
+				  duty = 1.0f;
+			  }
+			  else if(duty < -1.0f){
+				  duty = -1.0f;
+			  }
+			  duty = duty * 0.95;
+
 			  int16_t value = (int16_t)(duty * MAX_COMPARE);
-			  if(value>MAX_COMPARE) value=MAX_COMPARE;
-			  if(value<-MAX_COMPARE) value=-MAX_COMPARE;
 			  if(value>0){
 			      ChannelA::setCompare(MAX_COMPARE);
 			      ChannelB::setCompare(MAX_COMPARE-value);
