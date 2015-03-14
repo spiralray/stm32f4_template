@@ -29,9 +29,11 @@ Second, Install stm32plus using this project if your OS is Ubuntu or OS X
 
 * https://gist.github.com/0dfe899d1230ff1a5522.git
 
-    git clone https://gist.github.com/0dfe899d1230ff1a5522.git install_stm32plus
-    cd install_stm32plus
-    sh install_stm32plus.sh
+```
+git clone https://gist.github.com/0dfe899d1230ff1a5522.git install_stm32plus
+cd install_stm32plus
+sh install_stm32plus.sh
+```
 
 the library will be built on ~/workspace
 
