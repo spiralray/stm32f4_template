@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
 
 /* Defines */
 #define 	RTC_CLOCK_SOURCE_LSE

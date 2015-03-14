@@ -31,6 +31,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "stm32f4xx.h"
+#include "stm32f4xx_conf.h"
 #include "diskio.h"
 
 /* Uncomment the following line to select the SDIO Data transfer mode */ 
