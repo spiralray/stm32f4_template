@@ -1,6 +1,7 @@
 #include "utils/debug.h"
 
 using namespace stm32plus;
-#if defined UsartDebug
-DebugStream<UsartDebug<> > debug(DEBUG_BAUD);
+
+#ifdef DEBUG_PORT
+DebugStream<DEBUG_PORT<> > debug(115200);
 #endif

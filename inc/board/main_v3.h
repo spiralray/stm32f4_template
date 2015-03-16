@@ -327,12 +327,11 @@ namespace stm32plus {
 
     MPU6050<I2C1_Remap<I2CSingleByteMasterPollingFeature>,0> mpu6050;
 
-#if MAIN_V3_DEBUG_FT232
+#if DEBUG_PORT != Usart1_Remap1
     UsartWithBuffer<Usart1_Remap1<Usart1InterruptFeature>, Usart1InterruptFeature> com;
-#elif MAIN_V3_DEBUG_XBEE
-    UsartWithBuffer<Usart2_Remap1<Usart2InterruptFeature>, Usart2InterruptFeature> com;
-#else
-#error MAIN_V3 debug port not defined! Select MAIN_V3_DEBUG_FT232 or MAIN_V3_DEBUG_XBEE in Makefile.
+#endif
+#if DEBUG_PORT != Usart2_Remap1
+    UsartWithBuffer<Usart2_Remap1<Usart2InterruptFeature>, Usart2InterruptFeature> xbee;
 #endif
 
   public:
@@ -352,8 +351,13 @@ namespace stm32plus {
       toggle4(pe[15],true),
       can(),
       encoders(),
-      mpu6050(I2C::Parameters(100000)), // 100kHz
-      com()
+      mpu6050(I2C::Parameters(100000)) // 100kHz
+#if DEBUG_PORT != Usart1_Remap1
+      ,com()
+#endif
+#if DEBUG_PORT != Usart2_Remap1
+  	  ,xbee()
+#endif
   {
       Spi3V1Params.spi_mode=SPI_Mode_Master;
       Spi3V1Params.spi_baudRatePrescaler = SPI_BaudRatePrescaler_256;
