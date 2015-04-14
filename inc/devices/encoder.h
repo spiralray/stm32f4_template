@@ -17,7 +17,7 @@ namespace stm32plus{
 				TimerEnc::enablePeripheral();
 
 				speed= 0;
-				location = 0;
+				position = 0;
 			}
 			~Encoder(){}
 			inline void captureSpeed(){
@@ -33,21 +33,21 @@ namespace stm32plus{
 			int16_t getSpeed() const{
 				return speed;
 			}
-			inline void updateLocation(){
+			inline void updatePosition(){
 			  captureSpeed();
-			  location += getSpeed();
+			  position += getSpeed();
 			}
-			inline void setLocation(int32_t _location) {
+			inline void setPosition(int32_t _position) {
 			  uint16_t nowCounter=TimerEnc::getCounter();
 			  prevCounter=nowCounter;
-			  location = _location;
+			  position = _position;
 			}
-			int32_t getLocation() const{
-			  return location;
+			int32_t getPosition() const{
+			  return position;
 			}
 		private:
 			uint16_t prevCounter;
 			int16_t speed;
-			int32_t location;
+			int32_t position;
 	};
 }
