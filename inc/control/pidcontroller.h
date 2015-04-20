@@ -15,6 +15,9 @@ public:
 	void setKp(T _Kp){
 	  Kp = _Kp;
 	}
+	T getKp(){
+		return Kp;
+	}
 protected:
 	T Kp;
 	T Ki;
@@ -23,4 +26,35 @@ protected:
 	T ep;
 	T ei;
 	T u;
+};
+
+template<typename T>
+class PIDSpeedController: public PIDController<T> {
+public:
+	PIDSpeedController(T _Kp, T _Ki, T _Kd, T _isat=T(0), T _dt=T(1), T _maxPower=T(1)) : PIDController<T>(_Kp,_Ki,_Kd)
+	{
+		maxPower = _maxPower;
+	}
+
+	~PIDSpeedController(){}
+	void update(T r, T x){
+		T deff = r - x;
+		T old_u = PIDController<T>::u;
+
+		PIDController<T>::ei += (deff + ed)/2.0 * dt;
+		if(PIDController<T>::isat>T(0)){ MyMath::saturate(PIDController<T>::ei, PIDController<T>::isat); } // Anti wind-up
+
+		T ret = PIDController<T>::Kp * deff + PIDController<T>::Ki * PIDController<T>::ei + PIDController<T>::Kd * (deff - ed) / dt;
+
+		ed = deff;
+		PIDController<T>::u = old_u + ret;
+
+		if( PIDController<T>::u > maxPower ) PIDController<T>::u = maxPower;
+		else if( PIDController<T>::u < -maxPower ) PIDController<T>::u = -maxPower;
+
+	}
+protected:
+	T dt;
+	T ed;
+	T maxPower;
 };
