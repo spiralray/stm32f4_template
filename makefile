@@ -27,7 +27,8 @@ OCDMODE = SWD
 #OCDMODE = JTAG
 
 # Select SWD Debug Adapter
-DBG_ADAPTER  = STLINKV2
+#DBG_ADAPTER  = STLINKV2
+DBG_ADAPTER  = STLINKV2_1
 #DBG_ADAPTER  = JTAGKEY2_SWD
 #DBG_ADAPTER  = CMSIS-DAP
 #DBG_ADAPTER  = VERSALOON
@@ -87,10 +88,9 @@ else ifeq ($(DBG_ADAPTER),CMSIS-DAP)
 OCD_ARG = -s $(OCDIR)/tcl						\
 		  -f interface/cmsis-dap.cfg			\
 		  -f target/stm32f4x_flash.cfg
-else ifeq ($(DBG_ADAPTER),JTAGKEY2_SWD)
+else ifeq ($(DBG_ADAPTER),STLINKV2_1)
 OCD_ARG = -s $(OCDIR)/tcl						\
-		  -f interface/jtagkey2_swd.cfg 		\
-		  -f target/stm32f4x_flash.cfg
+		  -f target/nucleo-f4_flash.cfg
 else
 OCD_ARG = -s $(OCDIR)/tcl						\
 		  -f target/stm32f4discovery_flash.cfg
@@ -498,7 +498,7 @@ program :
 ifneq (,$(filter $(shell uname),Darwin Linux))
 #	@cp $(TARGET).elf $(OCDIR)
 #	@cd $(OCDIR) && ./$(OCD) $(OCD_CMD) -c "mt_flash $(TARGET).elf"
-	@$(OCDIR)/$(OCD) $(OCD_CMD) -c "mt_flash_bin $(TARGET).bin 0x08000000"
+	@$(OCDIR)/bin/$(OCD) $(OCD_CMD) -c "mt_flash_bin $(TARGET).bin 0x08000000"
 else
 	$(OCD) $(OCD_CMD) -c "mt_flash $(TARGET).elf"
 #	$(OCD) $(OCD_CMD) -c "eraser"

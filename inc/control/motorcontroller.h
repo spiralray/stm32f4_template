@@ -18,7 +18,7 @@ public:
 };
 
 template<typename T, class TMotor, class TEncoder>
-class MotorLocationController : public MotorController<T, TMotor, TEncoder>{
+class MotorPositionController : public MotorController<T, TMotor, TEncoder>{
 protected:
   float nowTargetSpeed = 0;
   float accel;
@@ -26,20 +26,20 @@ protected:
   T Kp, lowKp;
   int32_t lowGainArea;
 
-  int32_t targetLocation;
+  int32_t targetPosition;
 
   bool stopFlag;
 
 public:
-  MotorLocationController(T _Kp,T _Ki,T _Kd,T _lowKp,T isat=0, float _accel=0,int16_t _maxSpeed=0, int32_t _lowGainArea=0): MotorController<T, TMotor, TEncoder>(_Kp,_Ki,_Kd,isat){
+  MotorPositionController(T _Kp,T _Ki,T _Kd,T _lowKp,T isat=0, float _accel=0,int16_t _maxSpeed=0, int32_t _lowGainArea=0): MotorController<T, TMotor, TEncoder>(_Kp,_Ki,_Kd,isat){
     accel = abs(_accel);
     maxSpeed = abs(_maxSpeed);
-    TEncoder::setLocation(0);
+    TEncoder::setPosition(0);
     Kp = _Kp;
     lowKp = _lowKp;
     lowGainArea = abs(_lowGainArea);
 
-    targetLocation = 0;
+    targetPosition = 0;
     stopFlag = false;
   }
 
@@ -47,18 +47,18 @@ public:
     return nowTargetSpeed;
   }
 
-  void setTargetLocation(int32_t l){
-    targetLocation = l;
+  void setTargetPosition(int32_t l){
+    targetPosition = l;
   }
 
   void update(){
 
-      int32_t l = targetLocation;
+      int32_t l = targetPosition;
 
       // NOTE: should be called after captureSpeed
       int16_t x=TEncoder::getSpeed();
-      int32_t nowLocation=TEncoder::getLocation();
-      int32_t target = l-nowLocation;
+      int32_t nowPosition=TEncoder::getPosition();
+      int32_t target = l-nowPosition;
 
       int CoundToStop = ( abs(nowTargetSpeed) +accel-1 )/accel;
       int MoveToStop = nowTargetSpeed * CoundToStop /2;
@@ -109,7 +109,7 @@ public:
     }
 
   void update(int32_t l){
-    setTargetLocation(l);
+    setTargetPosition(l);
     update();
   }
 

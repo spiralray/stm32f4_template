@@ -1,0 +1,12 @@
+Build/
+*~
+*.d
+*.lst
+*.o
+*.bin
+*.elf
+*.hex
+*.lss
+*.map
+*.s19
+*.sym

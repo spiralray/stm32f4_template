@@ -75,8 +75,8 @@ public:
   void onInterrupt(TimerEventType tet,uint8_t timerNumber){
     // オーバーフロー割り込みの場合
     if(tet==TimerEventType::EVENT_UPDATE){
-	encX.updateLocation();
-	encY.updateLocation();
+	encX.updatePosition();
+	encY.updatePosition();
 
 	mainBoard->mpu6050.readAccAll(acc);
 	mainBoard->mpu6050.readGyrAll(gyr);
@@ -150,9 +150,9 @@ int main(void)
   SensorTimer sensor_timer(&mainBoard);
 
   while(1){
-      encoderX_msg.data = sensor_timer.encX.getLocation();
+      encoderX_msg.data = sensor_timer.encX.getPosition();
       encoderX.publish( &encoderX_msg );
-      encoderY_msg.data = sensor_timer.encY.getLocation();
+      encoderY_msg.data = sensor_timer.encY.getPosition();
       encoderY.publish( &encoderY_msg );
       imu_msg = sensor_timer.imu_msg;
       imu.publish( &imu_msg );
