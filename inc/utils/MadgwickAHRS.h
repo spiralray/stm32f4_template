@@ -215,9 +215,9 @@ public:
   }
 
   void getYawPitchRoll(float &yaw, float &pitch, float &roll){
-	yaw   = atan2(2.0*(q0*q1 + q3*q2), q3*q3 - q0*q0 - q1*q1 + q2*q2);
-	pitch =  asin(-2.0*(q0*q2 - q1*q3));
-	roll  = atan2(2.0*(q1*q2 + q0*q3), q3*q3 + q2*q2 - q1*q1 - q0*q0);
+	yaw   = atan2(2.0f * (q1 * q2 + q0 * q3), q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3);   
+    pitch = -asin(2.0f * (q1 * q3 - q0 * q2));
+    roll  = atan2(2.0f * (q0 * q1 + q2 * q3), q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3);
   }
 
 };
