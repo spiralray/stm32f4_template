@@ -39,13 +39,12 @@ public:
 		MillisecondTimer::delay(100);
 		writeByte(PWR_MGMT_1, 0x00);
 
+		setGyrRange(GYR_RANGE_2000DPS);
+		setAccRange(ACC_RANGE_8G);
+
 		writeByte(USER_CTRL, 0x34); // Enable Master I2C, disable primary I2C I/F, and reset FIFO.
 		writeByte(SMPLRT_DIV, 9); // SMPLRT_DIV = 9, 100Hz sampling;
 		writeByte(CONFIG, (1 << 6) | (1 << 0)); // FIFO_mode = 1 (accept overflow), Use LPF, Bandwidth_gyro = 184 Hz, Bandwidth_temperature = 188 Hz,
-
-		//setGyrRange(GYR_RANGE_2000DPS);
-		//setAccRange(ACC_RANGE_8G);
-
 	}
 	inline int16_t readInt16(uint8_t addr){
 		union{
