@@ -35,6 +35,7 @@
 #include <stdbool.h>
 /* uC Related Inclusion */
 #include "stm32f4xx.h"
+#include "config/stdperiph.h"
 #include "diskio.h"
 
 /* Defines */
