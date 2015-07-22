@@ -84,8 +84,23 @@ int main(void)
   board.led1.On();
   mpu9250.setup();
 
-  while(1){
+  debug<<"Setting up MPU6050...\r\n";
+  mpu9250.setup();
+  debug<<"complete.\r\n";
 
+  while(1){
+	  char str[128];
+	  int16_t gyr[3];
+	  int16_t acc[3];
+#if 0
+	  sprintf(str, "Gyro / Acc: %6d %6d %6d %6d %6d %6d\r\n", mpu9250.readGyrX(), mpu9250.readGyrY(), mpu9250.readGyrZ(), mpu9250.readAccX(), mpu9250.readAccY(), mpu9250.readAccZ());
+#else
+	  mpu9250.readAccAll(acc);
+	  mpu9250.readGyrAll(gyr);
+	  sprintf(str, "Gyro / Acc: %6hd %6hd %6hd %6hd %6hd %6hd\r\n", gyr[0], gyr[1], gyr[2], acc[0], acc[1], acc[2]);
+#endif
+	  debug << str;
+	  MillisecondTimer::delay(10);
   }
 
 
