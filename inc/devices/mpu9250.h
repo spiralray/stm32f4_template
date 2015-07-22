@@ -1,10 +1,13 @@
 #include "config/stm32plus.h"
 #include "utils/debug.h"
 
-#include "config/gpio.h"
+#include "config/timing.h"
 #include "config/spi.h"
 
 using namespace stm32plus;
+
+#define AK8963_I2C_ADDR 0x0C
+#define MPU9250_READ_FLAG   0x80
 
 class MPU9250{
 protected:
@@ -31,13 +34,18 @@ public:
 		return (rx==0x71);
 	}
 	void setup(){
-		writeByte(0x19, 0x00);
-		//writeByte(0x24, {0b01011101});
-		//writeByte(0x25, {0x80|0x1e});
-		writeByte(0x6b, 0x00);
-		setGyrRange(GYR_RANGE_2000DPS);
-		setAccRange(ACC_RANGE_8G);
-		writeByte(0x37, 0x02);	// Enable I2C Bypass mode
+
+		writeByte(PWR_MGMT_1, 0x80);
+		MillisecondTimer::delay(100);
+		writeByte(PWR_MGMT_1, 0x00);
+
+		writeByte(USER_CTRL, 0x34); // Enable Master I2C, disable primary I2C I/F, and reset FIFO.
+		writeByte(SMPLRT_DIV, 9); // SMPLRT_DIV = 9, 100Hz sampling;
+		writeByte(CONFIG, (1 << 6) | (1 << 0)); // FIFO_mode = 1 (accept overflow), Use LPF, Bandwidth_gyro = 184 Hz, Bandwidth_temperature = 188 Hz,
+
+		//setGyrRange(GYR_RANGE_2000DPS);
+		//setAccRange(ACC_RANGE_8G);
+
 	}
 	inline int16_t readInt16(uint8_t addr){
 		union{
@@ -112,29 +120,124 @@ public:
 	{
 		uint8_t data[2] = { WriteAddr , WriteData };
 		spi.setNss(false);
-		while(!spi.readyToSend());
 		spi.send(data,2);
 		spi.setNss(true);
+		for(volatile int i=0;i<70;i++);
 	}
 
 	void readByte(uint8_t addr, uint8_t &rx){
-		addr |= 0x80;
+		addr |= MPU9250_READ_FLAG;
 		spi.setNss(false);
 		spi.send(&addr,1);
 		spi.receive(&rx,1);
 		spi.setNss(true);
+		for(volatile int i=0;i<70;i++);
 	}
 
 	void readBytes(uint8_t addr, uint8_t *rx, int bytes){
-		uint8_t send[bytes] = { 0x00 };
-		send[0] = 0x80 | addr;
+		uint8_t send[bytes];
+		send[0] = MPU9250_READ_FLAG | addr;
+		for(int i=1;i<bytes;i++){
+			send[i] = 0x00;
+		}
 
 		spi.setNss(false);
 		spi.send(send,1);
 		spi.send(send+1,bytes-1,rx);
 		spi.setNss(true);
+		for(volatile int i=0;i<70;i++);
 	}
 
 private:
+	enum {
+	  SELF_TEST_X_GYRO = 0x00,
+	  SELF_TEST_Y_GYRO = 0x01,
+	  SELF_TEST_Z_GYRO = 0x02,
+	  SELF_TEST_X_ACCEL = 0x0D,
+	  SELF_TEST_Y_ACCEL = 0x0E,
+	  SELF_TEST_Z_ACCEL = 0x0F,
+	  XG_OFFSET_H = 0x13,
+	  XG_OFFSET_L = 0x14,
+	  YG_OFFSET_H = 0x15,
+	  YG_OFFSET_L = 0x16,
+	  ZG_OFFSET_H = 0x17,
+	  ZG_OFFSET_L = 0x18,
+	  SMPLRT_DIV = 0x19,
+	  CONFIG = 0x1A,
+	  GYRO_CONFIG = 0x1B,
+	  ACCEL_CONFIG = 0x1C,
+	  ACCEL_CONFIG2 = 0x1D,
+	  LP_ACCEL_ODR = 0x1E,
+	  WOM_THR = 0x1F,
+	  FIFO_EN = 0x23,
+	  I2C_MST_CTRL = 0x24,
+	  I2C_SLV0_ADDR = 0x25,
+	  I2C_SLV0_REG = 0x26,
+	  I2C_SLV0_CTRL = 0x27,
+	  I2C_SLV1_ADDR = 0x28,
+	  I2C_SLV1_REG = 0x29,
+	  I2C_SLV1_CTRL = 0x2A,
+	  I2C_SLV2_ADDR = 0x2B,
+	  I2C_SLV2_REG = 0x2C,
+	  I2C_SLV2_CTRL = 0x2D,
+	  I2C_SLV3_ADDR = 0x2E,
+	  I2C_SLV3_REG = 0x2F,
+	  I2C_SLV3_CTRL = 0x30,
+	  I2C_SLV4_ADDR = 0x31,
+	  I2C_SLV4_REG = 0x32,
+	  I2C_SLV4_DO = 0x33,
+	  I2C_SLV4_CTRL = 0x34,
+	  I2C_SLV4_DI = 0x35,
+	  I2C_MST_STATUS = 0x36,
+	  INT_PIN_CFG = 0x37,
+	  INT_ENABLE = 0x38,
+	  INT_STATUS = 0x3A,
+	  ACCEL_OUT_BASE = 0x3B,
+	  TEMP_OUT_BASE = 0x41,
+	  GYRO_OUT_BASE = 0x43,
+	  EXT_SENS_DATA_BASE = 0x49,
+	  I2C_SLV0_DO = 0x63,
+	  I2C_SLV1_DO = 0x64,
+	  I2C_SLV2_DO = 0x65,
+	  I2C_SLV3_DO = 0x66,
+	  I2C_MST_DELAY_CTRL = 0x67,
+	  SIGNAL_PATH_RESET = 0x68,
+	  MOT_DETECT_CTRL = 0x69,
+	  USER_CTRL = 0x6A,
+	  PWR_MGMT_1 = 0x6B,
+	  PWR_MGMT_2 = 0x6C,
+	  FIFO_COUNTH = 0x72,
+	  FIFO_COUNTL = 0x73,
+	  FIFO_R_W = 0x74,
+	  WHO_AM_I = 0x75,
+	  XA_OFFSET_H = 0x77,
+	  XA_OFFSET_L = 0x78,
+	  YA_OFFSET_H = 0x7A,
+	  YA_OFFSET_L = 0x7B,
+	  ZA_OFFSET_H = 0x7D,
+	  ZA_OFFSET_L = 0x7E,
+	};
+	enum {
+	  AK8963_WIA    = 0x00, // Device ID
+	  AK8963_INFO   = 0x01, // Information
+	  AK8963_ST1    = 0x02, // Status 1
+	  AK8963_HXL    = 0x03, // Measurement data
+	  AK8963_HXH    = 0x04,
+	  AK8963_HYL    = 0x05,
+	  AK8963_HYH    = 0x06,
+	  AK8963_HZL    = 0x07,
+	  AK8963_HZH    = 0x08,
+	  AK8963_ST2    = 0x09, // Status 2
+	  AK8963_CNTL1  = 0x0A, // Control 1
+	  AK8963_CNTL2  = 0x0B, // Control 2
+	  AK8963_RSV    = 0x0B, // Reserved
+	  AK8963_ASTC   = 0x0C, // Self-test
+	  AK8963_TS1    = 0x0D, // Test 1
+	  AK8963_TS2    = 0x0E, // Test 2
+	  AK8963_I2CDIS = 0x0F, // I2C disable
+	  AK8963_ASAX   = 0x10, // X-axis sensitivity adjustment value
+	  AK8963_ASAY   = 0x11, // Y-axis sensitivity adjustment value
+	  AK8963_ASAZ   = 0x12, // Z-axis sensitivity adjustment value
+	};
 };
 
