@@ -43,7 +43,7 @@ public:
 		setAccRange(ACC_RANGE_8G);
 
 		writeByte(USER_CTRL, 0x34); // Enable Master I2C, disable primary I2C I/F, and reset FIFO.
-		writeByte(SMPLRT_DIV, 9); // SMPLRT_DIV = 9, 100Hz sampling;
+		writeByte(SMPLRT_DIV, 5); // SMPLRT_DIV = 9, 100Hz sampling;
 		writeByte(CONFIG, (1 << 6) | (1 << 0)); // FIFO_mode = 1 (accept overflow), Use LPF, Bandwidth_gyro = 184 Hz, Bandwidth_temperature = 188 Hz,
 	}
 	inline int16_t readInt16(uint8_t addr){
@@ -121,7 +121,7 @@ public:
 		spi.setNss(false);
 		spi.send(data,2);
 		spi.setNss(true);
-		for(volatile int i=0;i<70;i++);
+		for(volatile int i=0;i<30;i++);
 	}
 
 	void readByte(uint8_t addr, uint8_t &rx){
@@ -130,21 +130,16 @@ public:
 		spi.send(&addr,1);
 		spi.receive(&rx,1);
 		spi.setNss(true);
-		for(volatile int i=0;i<70;i++);
+		for(volatile int i=0;i<30;i++);
 	}
 
 	void readBytes(uint8_t addr, uint8_t *rx, int bytes){
-		uint8_t send[bytes];
-		send[0] = MPU9250_READ_FLAG | addr;
-		for(int i=1;i<bytes;i++){
-			send[i] = 0x00;
-		}
-
+		addr |= MPU9250_READ_FLAG;
 		spi.setNss(false);
-		spi.send(send,1);
-		spi.send(send+1,bytes-1,rx);
+		spi.send(&addr,1);
+		spi.receive(rx,bytes-1);
 		spi.setNss(true);
-		for(volatile int i=0;i<70;i++);
+		for(volatile int i=0;i<30;i++);
 	}
 
 private:
