@@ -117,10 +117,11 @@ void UsageFault_Handler(void)
     @retval	None.
 */
 /**************************************************************************/
+#ifndef USE_FREERTOS
 void SVC_Handler(void)
 {
 }
-
+#endif
 
 /**************************************************************************/
 /*!
@@ -141,9 +142,11 @@ void DebugMon_Handler(void)
     @retval	None.
 */
 /**************************************************************************/
+#ifndef USE_FREERTOS
 void PendSV_Handler(void)
 {
 }
+#endif
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */

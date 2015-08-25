@@ -223,6 +223,7 @@ OS_SUPPORT		= BARE_METAL
 
 STM32PLUS_DIR = ../stm32plus
 ROSLIB_DIR = ./lib/ros_lib
+RTOS_PATH	= ./lib/FreeRTOS
 
 FWLIB  			= $(STM32PLUS_DIR)/fwlib/f4/stdperiph
 ifeq ($(STM32PLUS_Fn),STM32PLUS_F407)
@@ -335,6 +336,21 @@ STARTUP_DIR = ./lib/startup
 ifeq ($(OS_SUPPORT),USE_FREERTOS)
 SFILES += \
 	$(SOURCE)/startup_$(shell echo $(MPU_MODEL)|tr "[:upper:]" "[:lower:]")_rtos.s
+	
+CFILES += \
+	$(RTOS_PATH)/croutine.c\
+	$(RTOS_PATH)/event_groups.c\
+	$(RTOS_PATH)/list.c\
+	$(RTOS_PATH)/queue.c\
+	$(RTOS_PATH)/tasks.c\
+	$(RTOS_PATH)/timers.c\
+	$(RTOS_PATH)/portable/GCC/ARM_CM4F/port.c	\
+	$(RTOS_PATH)/portable/MemMang/heap_2.c
+
+LIBINCDIRS += 								\
+	$(RTOS_PATH)/include					\
+	$(RTOS_PATH)/portable/GCC/ARM_CM4F
+	
 else
 SFILES += \
 	$(STARTUP_DIR)/startup_$(shell echo $(MPU_MODEL)|tr "[:upper:]" "[:lower:]").s
