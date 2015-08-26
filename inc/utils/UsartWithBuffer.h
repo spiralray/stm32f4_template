@@ -16,11 +16,13 @@ protected:
   typedef UsartXInterruptFeature MyUsartInterrupt;
   USARTX _usart;
 
-  const static int UART_BUFSIZE = 2048;
+  enum{
+	  BUFSIZE = 2048
+  };
   /* @brief Receive buffer. */
-  volatile uint8_t RX[UART_BUFSIZE];
+  volatile uint8_t RX[BUFSIZE];
   /* @brief Transmit buffer. */
-  volatile uint8_t TX[UART_BUFSIZE];
+  volatile uint8_t TX[BUFSIZE];
   /* @brief Receive buffer head. */
   volatile uint16_t RX_Head;
   /* @brief Receive buffer tail. */
@@ -62,7 +64,7 @@ public:
   bool TXBuffer_FreeSpace()
   {
     /* Make copies to make sure that volatile access is specified. */
-    uint16_t tempHead = (TX_Head + 1) & (UART_BUFSIZE-1);
+    uint16_t tempHead = (TX_Head + 1) & (BUFSIZE-1);
     uint16_t tempTail = TX_Tail;
     /* There are data left in the buffer unless Head and Tail are equal. */
     return (tempHead != tempTail);
@@ -81,7 +83,7 @@ public:
 	__disable_irq();
 	TX[tempTX_Head]= data;
 	/* Advance buffer head. */
-	TX_Head = (tempTX_Head + 1) & (UART_BUFSIZE-1);
+	TX_Head = (tempTX_Head + 1) & (BUFSIZE-1);
 	__enable_irq();
 
 	/* Enable TXE interrupt. */
@@ -109,7 +111,7 @@ public:
     __disable_irq();
     ans = (RX[RX_Tail]);
     /* Advance buffer tail. */
-    RX_Tail = (RX_Tail + 1) & (UART_BUFSIZE-1);
+    RX_Tail = (RX_Tail + 1) & (BUFSIZE-1);
     __enable_irq();
 
     return ans;
@@ -123,7 +125,7 @@ public:
     if(uet==UsartEventType::EVENT_RECEIVE) {
 
 	/* Advance buffer head. */
-	uint16_t tempRX_Head = (RX_Head + 1) & (UART_BUFSIZE-1);
+	uint16_t tempRX_Head = (RX_Head + 1) & (BUFSIZE-1);
 
 	/* Check for overflow. */
 	uint16_t tempRX_Tail = RX_Tail;
@@ -152,7 +154,7 @@ public:
 	    _usart.send(data);
 
 	    /* Advance buffer tail. */
-	    TX_Tail = (TX_Tail + 1) & (UART_BUFSIZE-1);
+	    TX_Tail = (TX_Tail + 1) & (BUFSIZE-1);
 	}
 
     }
