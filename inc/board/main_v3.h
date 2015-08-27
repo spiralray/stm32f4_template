@@ -327,10 +327,8 @@ namespace stm32plus {
 
     MPU6050<I2C1_Remap<I2CSingleByteMasterPollingFeature>,0> mpu6050;
 
-#if DEBUG_PORT != Usart1_Remap1
+#ifndef DEBUG_PORT
     UsartWithBuffer<Usart1_Remap1<Usart1InterruptFeature>, Usart1InterruptFeature> com;
-#endif
-#if DEBUG_PORT != Usart2_Remap1
     UsartWithBuffer<Usart2_Remap1<Usart2InterruptFeature>, Usart2InterruptFeature> xbee;
 #endif
 
@@ -352,10 +350,8 @@ namespace stm32plus {
       can(),
       encoders(),
       mpu6050(I2C::Parameters(100000)) // 100kHz
-#if DEBUG_PORT != Usart1_Remap1
+#ifndef DEBUG_PORT
       ,com()
-#endif
-#if DEBUG_PORT != Usart2_Remap1
   	  ,xbee()
 #endif
   {

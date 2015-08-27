@@ -3,5 +3,15 @@
 #include "debugstream.h"
 
 #ifdef DEBUG_PORT
-  extern DebugStream<stm32plus::DEBUG_PORT<> > debug;
+  extern DebugStream<UsartWithBuffer<DEBUG_PORT> > debug;
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
+  void putch(uint8_t data);
+  uint8_t getch(void);
+#ifdef __cplusplus
+ }
+#endif
+
 #endif

@@ -1,4 +1,5 @@
 /* Includes ------------------------------------------------------------------*/
+#include <stdio.h>
 #include "config/stm32plus.h"
 #include "config/gpio.h"
 #include "config/timing.h"

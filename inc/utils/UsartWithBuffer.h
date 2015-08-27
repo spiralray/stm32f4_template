@@ -117,6 +117,21 @@ public:
     return ans;
   }
 
+  /**************************************************************************/
+  /*!
+      Check UART RX Buffer Empty.
+   */
+  /**************************************************************************/
+  bool RXBufferData_Available()
+  {
+	  /* Make copies to make sure that volatile access is specified. */
+	  uint16_t tempHead = RX_Head;
+	  uint16_t tempTail = RX_Tail;
+
+	  /* There are data left in the buffer unless Head and Tail are equal. */
+	  return (tempHead != tempTail);
+  }
+
   /*
    * Interrupt callback function.
    */
