@@ -15,7 +15,7 @@
 #include "utils/debug.h"
 
 #include "hardware/canroot.h"
-#include "utils/UsartWithBuffer.h"
+#include "utils/UsartInterruptWithBuffer.h"
 
 #include "devices/led.h"
 #include "devices/button.h"
@@ -328,8 +328,8 @@ namespace stm32plus {
     MPU6050<I2C1_Remap<I2CSingleByteMasterPollingFeature>,0> mpu6050;
 
 #ifndef DEBUG_PORT
-    UsartWithBuffer<Usart1_Remap1<Usart1InterruptFeature>, Usart1InterruptFeature> com;
-    UsartWithBuffer<Usart2_Remap1<Usart2InterruptFeature>, Usart2InterruptFeature> xbee;
+    UsartInterruptWithBuffer<Usart1_Remap1<Usart1InterruptFeature>, Usart1InterruptFeature> com;
+    UsartInterruptWithBuffer<Usart2_Remap1<Usart2InterruptFeature>, Usart2InterruptFeature> xbee;
 #endif
 
   public:

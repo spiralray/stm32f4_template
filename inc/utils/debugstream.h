@@ -2,7 +2,7 @@
 
 #include "config/stm32plus.h"
 #include "config/usart.h"
-#include "utils/UsartWithBuffer.h"
+#include "utils/UsartInterruptWithBuffer.h"
 #include "utils/UsartInterruptOutputStream.h"
 
 using namespace stm32plus;

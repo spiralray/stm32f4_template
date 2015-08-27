@@ -6,7 +6,7 @@
 using namespace stm32plus;
 
 template<class USARTX, class UsartXInterruptFeature>
-class UsartWithBuffer {
+class UsartInterruptWithBuffer {
 
 protected:
   /*
@@ -38,14 +38,14 @@ public:
    * Use the constructor base initialiser to set up the USART at 57600
    */
 
-  UsartWithBuffer( int _baud = 115200): _usart(_baud) {
+  UsartInterruptWithBuffer( int _baud = 115200): _usart(_baud) {
     RX_Tail = 0;
     RX_Head = 0;
     TX_Tail = 0;
     TX_Head = 0;
 
     _usart.UsartInterruptEventSender.insertSubscriber(
-	UsartInterruptEventSourceSlot::bind(this,&UsartWithBuffer::onInterrupt)
+	UsartInterruptEventSourceSlot::bind(this,&UsartInterruptWithBuffer::onInterrupt)
     );
 
     // enable receive and transmit interrupts. this will start the whole chain of events
@@ -148,7 +148,7 @@ public:
 
 	if (tempRX_Head == tempRX_Tail) {
 	    /* Disable the Receive interrupt */
-	    _usart.disableInterrupts(MyUsartInterrupt::RECEIVE);
+	    //_usart.disableInterrupts(MyUsartInterrupt::RECEIVE);
 	}else{
 	    RX[RX_Head] = data;
 	    RX_Head = tempRX_Head;
@@ -162,7 +162,7 @@ public:
 	if (TX_Head == tempTX_Tail){
 	    /* Overflow MAX size Situation */
 	    /* Disable the Transmit interrupt */
-	    _usart.disableInterrupts(MyUsartInterrupt::TRANSMIT);
+	    //_usart.disableInterrupts(MyUsartInterrupt::TRANSMIT);
 	}else{
 	    /* Start transmitting. */
 	    uint8_t data = TX[TX_Tail];

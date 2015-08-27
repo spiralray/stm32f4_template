@@ -3,7 +3,7 @@
 #include "debugstream.h"
 
 #ifdef DEBUG_PORT
-  extern DebugStream<UsartWithBuffer<DEBUG_PORT> > debug;
+  extern DebugStream<UsartInterruptWithBuffer<DEBUG_PORT> > debug;
 
 #ifdef __cplusplus
  extern "C" {
