@@ -175,7 +175,7 @@ ifeq ($(EVAL_BOARD),USE_MAIN_V2)
  USE_FATFS_HAL		= USE_SDIO_AS_SDCARD
  STM32PLUS_Fn = STM32PLUS_F407
  
- DEBUG_PORT = Usart1
+ DEBUG_PORT = "Usart1<Usart1InterruptFeature>, Usart1InterruptFeature"
  
 else ifeq ($(EVAL_BOARD),USE_MAIN_V3)
  MPU_CLASS			= STM32F4XX
