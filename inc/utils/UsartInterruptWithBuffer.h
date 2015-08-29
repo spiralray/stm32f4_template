@@ -148,7 +148,7 @@ public:
 
 	if (tempRX_Head == tempRX_Tail) {
 	    /* Disable the Receive interrupt */
-	    //_usart.disableInterrupts(MyUsartInterrupt::RECEIVE);
+	    _usart.disableInterrupts(MyUsartInterrupt::RECEIVE);
 	}else{
 	    RX[RX_Head] = data;
 	    RX_Head = tempRX_Head;
@@ -162,7 +162,7 @@ public:
 	if (TX_Head == tempTX_Tail){
 	    /* Overflow MAX size Situation */
 	    /* Disable the Transmit interrupt */
-	    //_usart.disableInterrupts(MyUsartInterrupt::TRANSMIT);
+	    _usart.disableInterrupts(MyUsartInterrupt::TRANSMIT);
 	}else{
 	    /* Start transmitting. */
 	    uint8_t data = TX[TX_Tail];
