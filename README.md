@@ -3,6 +3,9 @@ stm32f4_template
 
 STM32F4 template program
 
+## LICENSE
+This project is provided under the [GNU General Public Licence](http://www.gnu.org/licenses/gpl.html) unless an alternative licence is provided in source.
+
 ## NOTICE
 SpiralRay uses following INTELLECTUAL PROPERTIES under each licence.
 Those source code are included in this project.
@@ -13,8 +16,8 @@ Those source code are included in this project.
 * Andrew Brown's [stm32plus](https://github.com/andysworkshop/stm32plus). 
   Using [this fork](https://github.com/spiralray/stm32plus) to support STM32F103CBT6
   
-
 * [rosserial](http://wiki.ros.org/rosserial)
+* Sebastian Madgwick's [IMU and AHRS algorithms](http://www.x-io.co.uk/open-source-imu-and-ahrs-algorithms/)
 
 ### Special thanks
 Sample program of Wired DUALSHOCK3 was made with the help of [ChiaYen Kan](https://www.youtube.com/watch?v=amEsLdh6Qe8).
