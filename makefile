@@ -230,12 +230,12 @@ RTOS_PATH	= ./lib/FreeRTOS
 
 FWLIB  			= $(STM32PLUS_DIR)/fwlib/f4/stdperiph
 ifeq ($(STM32PLUS_Fn),STM32PLUS_F407)
-STM32PLUS_LIB_DIR = $(STM32PLUS_DIR)/build/small-f4-$(HSE_CLOCK)-hard
-STATIC_LIB   	= -lstm32plus-small-f4-$(HSE_CLOCK)-hard
+STM32PLUS_LIB_DIR = $(STM32PLUS_DIR)/build/small-f4-$(HSE_CLOCK)e-hard
+STATIC_LIB   	= -lstm32plus-small-f4-$(HSE_CLOCK)e-hard
 else 
 	ifeq ($(STM32PLUS_Fn),STM32PLUS_F429)
-		STM32PLUS_LIB_DIR = $(STM32PLUS_DIR)/build/small-f429-$(HSE_CLOCK)-hard
-		STATIC_LIB   	= -lstm32plus-small-f429-$(HSE_CLOCK)-hard
+		STM32PLUS_LIB_DIR = $(STM32PLUS_DIR)/build/small-f429-$(HSE_CLOCK)e-hard
+		STATIC_LIB   	= -lstm32plus-small-f429-$(HSE_CLOCK)e-hard
 	endif
 endif
 
