@@ -66,9 +66,6 @@ int main(void)
 
   F4Discovery board;
 
-  printf("initializing...");
-  fflush(stdout);
-
   /* Init Host Library */
   USBH_Init(&USB_OTG_Core_dev,
 		  USB_OTG_FS_CORE_ID,
@@ -76,15 +73,22 @@ int main(void)
 		  &HID_cb,
 		  &USR_Callbacks);
 
-  printf("Finished\r\n");
 
   USBTimer timer;
 
   while(1){
 
-	  board.led1.Toggle();
-
 	  if( ps3_connected ){
+
+		  if( HID_PS3_Data.analog_stick[0] < 0x70 )	board.led1.On();
+		  else										board.led1.Off();
+		  if( HID_PS3_Data.analog_stick[1] < 0x70 )	board.led2.On();
+		  else										board.led2.Off();
+		  if( HID_PS3_Data.analog_stick[0] > 0x90 )	board.led3.On();
+		  else										board.led3.Off();
+		  if( HID_PS3_Data.analog_stick[1] > 0x90 )	board.led4.On();
+		  else										board.led4.Off();
+#ifdef DEBUG_PORT
 		  printf("Button state 0x%02x 0x%02x 0x%02x \n", HID_PS3_Data.button[0], HID_PS3_Data.button[1], HID_PS3_Data.button[2] );
 		  printf("Analog state 0x%02x 0x%02x 0x%02x 0x%02x \n", HID_PS3_Data.analog_stick[0], HID_PS3_Data.analog_stick[1], HID_PS3_Data.analog_stick[2], HID_PS3_Data.analog_stick[3] );
 
@@ -93,7 +97,7 @@ int main(void)
 		  printf("\n");
 
 		  printf("\n");
-
+#endif
 	  }
 
 	  MillisecondTimer::delay(30);
