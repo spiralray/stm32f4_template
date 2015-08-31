@@ -5,29 +5,24 @@ STM32F4 template program
 
 ## NOTICE
 SpiralRay uses following INTELLECTUAL PROPERTIES under each licence.
-Those sourcecode are included in this project.
+Those source code are included in this project.
 
-## LIBRARIES
-* Nemui Trinomius's TFT/OLED Control Sample with ChaN's FatFs.
-  http://nemuisan.blog.bai.ne.jp/?eid=192848
+### LIBRARIES
+* [Nemui Trinomius's TFT/OLED Control Sample with ChaN's FatFs.](http://nemuisan.blog.bai.ne.jp/?eid=192848)
 
-* Andrew Brown's stm32plus
-  https://github.com/andysworkshop/stm32plus
+* Andrew Brown's [stm32plus](https://github.com/andysworkshop/stm32plus). 
+  Using [this fork](https://github.com/spiralray/stm32plus) to support STM32F103CBT6
+  
 
-  Using this fork to support STM32F103CBT6
-  https://github.com/spiralray/stm32plus
+* [rosserial](http://wiki.ros.org/rosserial)
 
-* rosserial
-  http://wiki.ros.org/rosserial
+### Special thanks
+Sample program of Wired DUALSHOCK3 was made with the help of [ChiaYen Kan](https://www.youtube.com/watch?v=amEsLdh6Qe8).
 
 ## Usage
-First, install GNU Tools for ARM Embedded Processors and add PATH.
+First, install [GNU Tools for ARM Embedded Processors](https://launchpad.net/gcc-arm-embedded) and add PATH.
 
-* https://launchpad.net/gcc-arm-embedded
-
-Second, Install stm32plus using this project if your OS is Ubuntu or OS X
-
-* https://gist.github.com/0dfe899d1230ff1a5522.git
+Second, Install stm32plus using [this project](https://gist.github.com/0dfe899d1230ff1a5522.git) (Ubuntu or OS X is required)
 
 ```
 git clone https://gist.github.com/0dfe899d1230ff1a5522.git install_stm32plus
