@@ -15,16 +15,25 @@ namespace stm32plus{
   class Led {
   private:
     GpioPinRef pin;
+    bool state;
   public:
     Led(GpioPinRef _pin){
       pin = _pin;
+      state = false;
+      Off();
     }
 
     void On() {
       pin.set();
+      state = true;
     }
     void Off() {
       pin.reset();
+      state = false;
+    }
+    void Toggle(){
+    	if(state)	Off();
+    	else		On();
     }
   };
 
