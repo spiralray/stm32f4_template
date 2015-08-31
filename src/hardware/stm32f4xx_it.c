@@ -20,13 +20,23 @@
 #include "stm32f4xx_it.h"
 #include "hw_config.h"
 
+#ifdef USE_USB
+#include "usb_bsp.h"
+#endif
+
 /* Defines -------------------------------------------------------------------*/
 
 /* Variables -----------------------------------------------------------------*/
+#ifdef USE_USB
+extern USB_OTG_CORE_HANDLE          USB_OTG_Core_dev;
+#endif
 
 /* Constants -----------------------------------------------------------------*/
 
 /* Function prototypes -------------------------------------------------------*/
+#ifdef USE_ACCURATE_TIME
+extern void USB_OTG_BSP_TimerIRQ (void);
+#endif
 
 /* Functions -----------------------------------------------------------------*/
 
@@ -167,6 +177,35 @@ void RTC_IRQHandler(void)
 	/* Put Your Code Here. */
 }
 
+#ifdef USE_USB
+#ifdef USE_ACCURATE_TIME
+/**
+  * @brief  TIM2_IRQHandler
+  *         This function handles Timer2 Handler.
+  * @param  None
+  * @retval None
+  */
+void TIM2_IRQHandler(void)
+{
+  USB_OTG_BSP_TimerIRQ();
+}
+#endif
 
+/**
+  * @brief  OTG_FS_IRQHandler
+  *          This function handles USB-On-The-Go FS global interrupt request.
+  *          requests.
+  * @param  None
+  * @retval None
+  */
+#ifdef USE_USB_OTG_FS
+void OTG_FS_IRQHandler(void) {
+#else
+void OTG_HS_IRQHandler(void) {
+#endif
+
+  USBH_OTG_ISR_Handler(&USB_OTG_Core_dev);
+}
+#endif
 
 /* End Of File ---------------------------------------------------------------*/
