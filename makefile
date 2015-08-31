@@ -201,6 +201,7 @@ else ifeq ($(EVAL_BOARD),USE_MAIN_V3)
  USE_TOUCH_SENCE 	=
  USE_FATFS_HAL		= USE_SPI_AS_MMC
  STM32PLUS_Fn = STM32PLUS_F407
+ #DEBUG_PORT = "Usart2<Usart2InterruptFeature>, Usart2InterruptFeature"
  
 else ifeq ($(EVAL_BOARD),USE_32F429IDISCOVERY)
  MPU_CLASS			= STM32F4XX
@@ -220,6 +221,8 @@ PERIF_DRIVER    = USE_STDPERIPH_DRIVER
 # Use FreeRTOS?
 OS_SUPPORT		= BARE_METAL
 #OS_SUPPORT		= USE_FREERTOS
+
+#USE_USB			= USE_USBHOST
 
 STM32PLUS_DIR = ../stm32plus
 ROSLIB_DIR = ./lib/ros_lib
@@ -330,6 +333,38 @@ else
  $(error MUST Select Hardware Abstraction Layer )
 endif
 
+#/*----- USB Host library PATH -----*/
+ifneq ($(USE_USB),)
+
+DEFZ += \
+	USE_USB\
+	$(USE_USB)
+
+#Use TIM2 to count accurate time
+#DEFZ += USE_ACCURATE_TIME
+
+USB_OTG = ./lib/STM32_USB_OTG_Driver
+LIBINCDIRS += \
+	$(USB_OTG)/inc
+
+CFILES += \
+	$(USB_OTG)/src/usb_core.c		\
+	$(USB_OTG)/src/usb_hcd_int.c	\
+	$(USB_OTG)/src/usb_hcd.c
+endif
+
+ifeq ($(USE_USB),USE_USBHOST)
+USB_HOST = ./lib/STM32_USB_HOST_Library
+LIBINCDIRS += \
+	$(USB_HOST)/Core/inc
+CFILES += \
+	$(wildcard $(USB_HOST)/Core/src/*.c)
+
+INCPATHS += \
+	./inc/hardware/usb
+CFILES += \
+	$(wildcard ./src/hardware/usb/*.c)
+endif
 
 #/*----- STARTUP code PATH -----*/
 STARTUP_DIR = ./lib/startup
