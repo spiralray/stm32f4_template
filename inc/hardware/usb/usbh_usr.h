@@ -49,7 +49,7 @@
 
 
 extern USBH_Usr_cb_TypeDef USR_Callbacks;
-extern uint8_t ps3_connected;
+extern volatile uint8_t ps3_connected;
 
 /**
   * @}

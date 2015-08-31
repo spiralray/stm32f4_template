@@ -107,7 +107,7 @@ USBH_Usr_cb_TypeDef USR_Callbacks =
 		USBH_USR_UnrecoveredError
 };
 
-uint8_t ps3_connected = 0;
+volatile uint8_t ps3_connected = 0;
 
 /**
  * @}
