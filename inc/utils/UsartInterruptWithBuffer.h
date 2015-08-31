@@ -6,7 +6,7 @@
 using namespace stm32plus;
 
 template<class USARTX, class UsartXInterruptFeature>
-class UsartWithBuffer {
+class UsartInterruptWithBuffer {
 
 protected:
   /*
@@ -38,14 +38,14 @@ public:
    * Use the constructor base initialiser to set up the USART at 57600
    */
 
-  UsartWithBuffer( int _baud = 115200): _usart(_baud) {
+  UsartInterruptWithBuffer( int _baud = 115200): _usart(_baud) {
     RX_Tail = 0;
     RX_Head = 0;
     TX_Tail = 0;
     TX_Head = 0;
 
     _usart.UsartInterruptEventSender.insertSubscriber(
-	UsartInterruptEventSourceSlot::bind(this,&UsartWithBuffer::onInterrupt)
+	UsartInterruptEventSourceSlot::bind(this,&UsartInterruptWithBuffer::onInterrupt)
     );
 
     // enable receive and transmit interrupts. this will start the whole chain of events
@@ -115,6 +115,21 @@ public:
     __enable_irq();
 
     return ans;
+  }
+
+  /**************************************************************************/
+  /*!
+      Check UART RX Buffer Empty.
+   */
+  /**************************************************************************/
+  bool RXBufferData_Available()
+  {
+	  /* Make copies to make sure that volatile access is specified. */
+	  uint16_t tempHead = RX_Head;
+	  uint16_t tempTail = RX_Tail;
+
+	  /* There are data left in the buffer unless Head and Tail are equal. */
+	  return (tempHead != tempTail);
   }
 
   /*
