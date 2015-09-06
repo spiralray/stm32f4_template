@@ -60,7 +60,8 @@ public:
     return (TX_Head == tempTail);
   }
 
-  bool TXBuffer_FreeSpace()
+  //TXBuffer_FreeSpace
+  bool readyToSend()
   {
     /* Make copies to make sure that volatile access is specified. */
     uint16_t tempHead = (TX_Head + 1) & (BUFSIZE-1);
@@ -69,11 +70,11 @@ public:
     return (tempHead != tempTail);
   }
 
-  bool putch(uint8_t data)
+  bool send(uint8_t data)
   {
 
     uint16_t tempTX_Head;
-    bool isFree = TXBuffer_FreeSpace();
+    bool isFree = readyToSend();
 
     if(isFree)
       {
@@ -91,12 +92,6 @@ public:
     return isFree;
   }
 
-  /* Send a string */
-  void puts(char *s)
-  {
-    while (*s) putch(*s++);
-  }
-
   bool dataAvailable(){
     uint16_t tempHead = RX_Head;
     uint16_t tempTail = RX_Tail;
@@ -104,7 +99,7 @@ public:
     return (tempHead != tempTail);
   }
 
-  uint8_t getch(){
+  uint8_t receive(){
     uint8_t ans;
 
     __disable_irq();
@@ -114,21 +109,6 @@ public:
     __enable_irq();
 
     return ans;
-  }
-
-  /**************************************************************************/
-  /*!
-      Check UART RX Buffer Empty.
-   */
-  /**************************************************************************/
-  bool RXBufferData_Available()
-  {
-	  /* Make copies to make sure that volatile access is specified. */
-	  uint16_t tempHead = RX_Head;
-	  uint16_t tempTail = RX_Tail;
-
-	  /* There are data left in the buffer unless Head and Tail are equal. */
-	  return (tempHead != tempTail);
   }
 
   /*

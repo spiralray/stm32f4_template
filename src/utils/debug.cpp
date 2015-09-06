@@ -18,8 +18,8 @@ extern "C" void putch(uint8_t data)
 }
 
 extern "C" uint8_t getch(void){
-	if (debug.usart.RXBufferData_Available() )	return debug.usart.getch();
-	else										return false;
+	if (debug.usart.dataAvailable() )	return debug.usart.receive();
+	else								return false;
 
 }
 

@@ -20,7 +20,7 @@ namespace stm32plus {
       // overrides from OutputStream
 
       virtual bool write(uint8_t c) override {
-    	  _usart.putch(c);
+    	  _usart.send(c);
     	  return true;
       }
       virtual bool write(const void *buffer,uint32_t size) override{
@@ -30,7 +30,7 @@ namespace stm32plus {
     	  ptr=static_cast<const uint8_t *>(buffer);
 
     	  while(size--)
-    		  _usart.putch(*ptr++);
+    		  _usart.send(*ptr++);
 
     	  return true;
 
