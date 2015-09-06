@@ -328,8 +328,8 @@ namespace stm32plus {
     MPU6050<I2C1_Remap<I2CSingleByteMasterPollingFeature>,0> mpu6050;
 
 #ifndef DEBUG_PORT
-    UsartInterruptWithBuffer<Usart1_Remap1<Usart1InterruptFeature>, Usart1InterruptFeature> com;
-    UsartInterruptWithBuffer<Usart2_Remap1<Usart2InterruptFeature>, Usart2InterruptFeature> xbee;
+    UsartInterruptWithBuffer<Usart1_Remap1<Usart1InterruptFeature>> com;
+    UsartInterruptWithBuffer<Usart2_Remap1<Usart2InterruptFeature>> xbee;
 #endif
 
   public:

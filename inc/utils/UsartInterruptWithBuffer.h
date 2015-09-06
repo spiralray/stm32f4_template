@@ -5,7 +5,7 @@
 
 using namespace stm32plus;
 
-template<class USARTX, class UsartXInterruptFeature>
+template<class USARTX>
 class UsartInterruptWithBuffer {
 
 protected:
@@ -13,7 +13,6 @@ protected:
    * The USART1 peripheral configured with the interrupt feature
    */
 
-  typedef UsartXInterruptFeature MyUsartInterrupt;
   USARTX _usart;
 
   enum{
@@ -49,7 +48,7 @@ public:
     );
 
     // enable receive and transmit interrupts. this will start the whole chain of events
-    _usart.enableInterrupts(MyUsartInterrupt::RECEIVE);
+    _usart.enableInterrupts(USART_IT_RXNE);
   }
 
   bool TXBuffer_Empty()
@@ -87,7 +86,7 @@ public:
 	__enable_irq();
 
 	/* Enable TXE interrupt. */
-	_usart.enableInterrupts(MyUsartInterrupt::TRANSMIT);
+	_usart.enableInterrupts(USART_IT_TXE);
       }
     return isFree;
   }
@@ -148,7 +147,7 @@ public:
 
 	if (tempRX_Head == tempRX_Tail) {
 	    /* Disable the Receive interrupt */
-	    _usart.disableInterrupts(MyUsartInterrupt::RECEIVE);
+	    _usart.disableInterrupts(USART_IT_RXNE);
 	}else{
 	    RX[RX_Head] = data;
 	    RX_Head = tempRX_Head;
@@ -162,7 +161,7 @@ public:
 	if (TX_Head == tempTX_Tail){
 	    /* Overflow MAX size Situation */
 	    /* Disable the Transmit interrupt */
-	    _usart.disableInterrupts(MyUsartInterrupt::TRANSMIT);
+	    _usart.disableInterrupts(USART_IT_TXE);
 	}else{
 	    /* Start transmitting. */
 	    uint8_t data = TX[TX_Tail];
