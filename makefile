@@ -199,7 +199,7 @@ else ifeq ($(EVAL_BOARD),USE_MAIN_V3)
  HSE_CLOCK 			= 8000000
  USE_EXT_SRAM   	= 
  USE_TOUCH_SENCE 	=
- USE_FATFS_HAL		= USE_SPI_AS_MMC
+ USE_FATFS_HAL		= 
  STM32PLUS_Fn = STM32PLUS_F407
  #DEBUG_PORT = "Usart2<Usart2InterruptFeature>"
  
@@ -316,6 +316,8 @@ CPPFILES = $(wildcard $(SOURCE)/*.cpp) $(wildcard $(SOURCE)/utils/*.cpp)  $(wild
 CPPFILES += $(ROSLIB_DIR)/time.cpp $(ROSLIB_DIR)/duration.cpp
 
 #/*----- FatFs library PATH -----*/	
+ifneq ($(USE_FATFS_HAL),)
+
 FATFS = ./lib/ff
 LIBINCDIRS += $(FATFS)
 CFILES += \
@@ -331,6 +333,8 @@ CFILES += \
  $(FATFS)/sdio_stm32f4.c
 else
  $(error MUST Select Hardware Abstraction Layer )
+endif
+
 endif
 
 #/*----- USB Host library PATH -----*/

@@ -35,10 +35,12 @@
 /* Function Inclusion */
 #include "rtc_support.h"
 
+#if 0
 /* High Level Function */
 #include "diskio.h"
 #include "ff.h"
 #include "ff_rtc_if.h"
+#endif
 
 /* Macros */
 #define countof(a)   (sizeof(a) / sizeof(*(a)))
