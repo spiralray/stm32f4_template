@@ -7,9 +7,9 @@ OUTPUT_FORMAT ("elf32-littlearm")
 /* Memory Spaces Definitions */
 MEMORY
 {
-	RAM1 (xrw)	: ORIGIN = 0x20000000, LENGTH = 112k	/* Main Embedded SRAM 					*/
+	RAM1 (xrw)	: ORIGIN = 0x20000000, LENGTH = 80k	/* Main Embedded SRAM 					*/
 	RAM2 (xrw)	: ORIGIN = 0x2001C000, LENGTH = 16k		/* Main Embedded SRAM (usually DMA use) */
-	RAM3 (xrw)	: ORIGIN = 0x10000000, LENGTH = 64k		/* Core-Coupled SRAM 					*/
+	RAM3 (xrw)	: ORIGIN = 0x20008000, LENGTH = 32k	/* Main Embedded SRAM 					*/
 	RAM4 (xrw)	: ORIGIN = 0x40024000, LENGTH = 4K		/* Backuped SRAM 						*/
 	RAM5 (xrw)	: ORIGIN = 0x68000000, LENGTH = 1M		/* External SRAM (FSMC) 				*/
 	ROM (rx)	: ORIGIN = 0x08000000, LENGTH = 1M		/* Main Embedded FlashROM				*/
