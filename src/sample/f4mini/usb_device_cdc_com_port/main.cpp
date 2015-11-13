@@ -20,217 +20,222 @@ using namespace stm32plus::usb;
  * To work as a USB device, connect PA9 to VBUS
  */
 
-class UsbDeviceCdcComPortTest {
+class UsbDeviceCdcComPort {
+
+protected:
 
-  public:
+	enum{
+		BUFSIZE = 2048
+	};
+	/* @brief Receive buffer. */
+	volatile uint8_t RX[BUFSIZE];
+	/* @brief Receive buffer head. */
+	volatile uint16_t RX_Head;
+	/* @brief Receive buffer tail. */
+	volatile uint16_t RX_Tail;
+
+public:
+
+	/*
+	 * declare a type for the the USB stack
+	 */
 
-    /*
-     * declare a type for the the USB stack
-     */
+	typedef ComPortCdcDevice<
+			InternalFsPhy<>,                    // use the internal full speed PHY with no features
+			ManufacturerTextFeature,            // we'll supply a manufacturer name
+			ProductTextFeature,                 // ... and a product name
+			SerialNumberTextFeature,            // ... and a serial number
+			ConfigurationTextFeature            // ... and a config text string
+			> MyUsb;
 
-    typedef ComPortCdcDevice<
-      InternalFsPhy<>,                    // use the internal full speed PHY with no features
-      ManufacturerTextFeature,            // we'll supply a manufacturer name
-      ProductTextFeature,                 // ... and a product name
-      SerialNumberTextFeature,            // ... and a serial number
-      ConfigurationTextFeature            // ... and a config text string
-    > MyUsb;
+	MyUsb usb;
 
+	/*
+	 * The current line coding (baud rate, parity etc)
+	 * The CdcLineCoding constructor sets a default of 9600/8/N/1
+	 */
 
-    /*
-     * Flag to communicate between IRQ and non-IRQ code and the message to send back
-     */
+	CdcLineCoding _lineCoding;
 
-    enum class LoopState {
-      WAITING,
-      REPORT_KEYPRESS
-    };
+	UsbDeviceCdcComPort(): usb(){
+		RX_Tail = 0;
+		RX_Head = 0;
 
-    volatile LoopState _loopState;
-    char _message[16];
+		// initialise
 
+		/*
+		 * set up the parameters for the USB CDC device. Do not attempt to reuse vid/pid combinations unless
+		 * you know how to flush your PC's USB driver cache because Windows caches the characteristics of each
+		 * device and will suspend your device if it suddenly re-appears as a different device type.
+		 */
 
-    /*
-     * The current line coding (baud rate, parity etc)
-     * The CdcLineCoding constructor sets a default of 9600/8/N/1
-     */
+		MyUsb::Parameters usbParams;
 
-    CdcLineCoding _lineCoding;
+		usbParams.device_vid=0xDEAD;           // demo vendor ID
+		usbParams.device_pid=0x0010;           // demo product ID
 
+		usbParams.device_manufacturer_text="Andy's Workshop";   // see params.device_language_[ids/count] to change the languages
+		usbParams.device_product_text="stm32plus virtual COM port";
+		usbParams.device_serial_text="0123456789";
+		usbParams.device_configuration_text="My configuration";
 
-    /*
-     * Run the example
-     */
+		usbParams.cdc_com_port_rx_buffer_size=16;  // default of 1Kb is far too big for this app
 
-    void run() {
+		/*
+		 * Subscribe to errors
+		 */
 
-      LoopState state;
+		usb.UsbErrorEventSender.insertSubscriber(UsbErrorEventSourceSlot::bind(this,&UsbDeviceCdcComPort::onError));
 
-      // initialise
+		/*
+		 * Subscribe to USB events - data received from the host will be notified to us
+		 * asynchronously.
+		 */
 
-      _loopState=LoopState::WAITING;
-      strncpy(_message,"You pressed: X\r\n",sizeof(_message));
+		usb.UsbEventSender.insertSubscriber(UsbEventSourceSlot::bind(this,&UsbDeviceCdcComPort::onEvent));
 
-      /*
-       * set up the parameters for the USB CDC device. Do not attempt to reuse vid/pid combinations unless
-       * you know how to flush your PC's USB driver cache because Windows caches the characteristics of each
-       * device and will suspend your device if it suddenly re-appears as a different device type.
-       */
+		/*
+		 * Start the USB peripheral. It will run asynchronously. There is no requirement
+		 * for the parameters to remain in scope after the initialise call
+		 */
 
-      MyUsb::Parameters usbParams;
+		if(!usb.initialise(usbParams))
+			for(;;);      // onError() has already locked up
+	}
 
-      usbParams.device_vid=0xDEAD;           // demo vendor ID
-      usbParams.device_pid=0x0010;           // demo product ID
+	bool send(uint8_t data)
+	{
+		usb.transmit(&data,1);
+	}
 
-      usbParams.device_manufacturer_text="Andy's Workshop";   // see params.device_language_[ids/count] to change the languages
-      usbParams.device_product_text="stm32plus virtual COM port";
-      usbParams.device_serial_text="0123456789";
-      usbParams.device_configuration_text="My configuration";
+	void send(char *str){
+		usb.transmit(str,strlen(str));
+	}
 
-      usbParams.cdc_com_port_rx_buffer_size=16;  // default of 1Kb is far too big for this app
+	bool dataAvailable(){
+		uint16_t tempHead = RX_Head;
+		uint16_t tempTail = RX_Tail;
+		/* There are data left in the buffer unless Head and Tail are equal. */
+		return (tempHead != tempTail);
+	}
 
-      /*
-       * Declare the USB object - this will initialise internal variables but will not
-       * start the peripheral
-       */
+	uint8_t receive(){
+		uint8_t ans;
 
-      MyUsb usb;
+		__disable_irq();
+		ans = (RX[RX_Tail]);
+		/* Advance buffer tail. */
+		RX_Tail = (RX_Tail + 1) & (BUFSIZE-1);
+		__enable_irq();
 
-      /*
-       * Subscribe to errors
-       */
+		return ans;
+	}
 
-      usb.UsbErrorEventSender.insertSubscriber(UsbErrorEventSourceSlot::bind(this,&UsbDeviceCdcComPortTest::onError));
+	/**
+	 * Event callback from the USB stack. Lots of stuff will come through here but
+	 * we're only interested in data arriving from the host and control messages
+	 */
 
-      /*
-       * Subscribe to USB events - data received from the host will be notified to us
-       * asynchronously.
-       */
+	void onEvent(UsbEventDescriptor& ued) {
 
-      usb.UsbEventSender.insertSubscriber(UsbEventSourceSlot::bind(this,&UsbDeviceCdcComPortTest::onEvent));
+		// reject all events that we don't care about
 
-      /*
-       * Start the USB peripheral. It will run asynchronously. There is no requirement
-       * for the parameters to remain in scope after the initialise call
-       */
+		if(ued.eventType==UsbEventDescriptor::EventType::CDC_DATA_RECEIVED)
+			onData(static_cast<CdcDataReceivedEvent&>(ued));
+		else if(ued.eventType==UsbEventDescriptor::EventType::CDC_CONTROL)
+			onControl(static_cast<CdcControlEvent&>(ued));
+	}
 
-      if(!usb.initialise(usbParams))
-        for(;;);      // onError() has already locked up
 
-      // loop forever, or until an error interrupts us
+	/**
+	 * Control event received from the host
+	 */
 
-      for(;;) {
+	void onControl(CdcControlEvent& event) {
 
-        // block until a response is ready to send
+		switch(event.opcode) {
 
-        while((state=_loopState)==LoopState::WAITING);
-        _loopState=LoopState::WAITING;
+		/*
+		 * We don't process these. They're enumerated here so you can
+		 * see what's available.
+		 */
 
-        if(state==LoopState::REPORT_KEYPRESS) {
+		case CdcControlCommand::SEND_ENCAPSULATED_COMMAND:
+		case CdcControlCommand::GET_ENCAPSULATED_RESPONSE:
+		case CdcControlCommand::SET_COMM_FEATURE:
+		case CdcControlCommand::GET_COMM_FEATURE:
+		case CdcControlCommand::CLEAR_COMM_FEATURE:
+		case CdcControlCommand::SET_CONTROL_LINE_STATE:
+		case CdcControlCommand::SEND_BREAK:
+			break;
 
-          // transmit the reponse
+		case CdcControlCommand::SET_LINE_CODING:      // set a new line encoding
+			memcpy(&_lineCoding,event.data,sizeof(_lineCoding));
+			break;
 
-          usb.transmit(_message,sizeof(_message));
+		case CdcControlCommand::GET_LINE_CODING:      // return the current line encoding
+			event.data=reinterpret_cast<uint8_t *>(&_lineCoding);
+			break;
 
-          // we're ready to receive the next packet from the host
+		default:
+			break;
+		}
+	}
 
-          usb.beginReceive();
-        }
-      }
-    }
 
+	/**
+	 * Data received from the host
+	 */
 
-    /**
-     * Event callback from the USB stack. Lots of stuff will come through here but
-     * we're only interested in data arriving from the host and control messages
-     */
+	void onData(CdcDataReceivedEvent& event) {
 
-    void onEvent(UsbEventDescriptor& ued) {
+		// add character to the message to send
 
-      // reject all events that we don't care about
+		for(int i=0;i<event.size;i++){
 
-      if(ued.eventType==UsbEventDescriptor::EventType::CDC_DATA_RECEIVED)
-        onData(static_cast<CdcDataReceivedEvent&>(ued));
-      else if(ued.eventType==UsbEventDescriptor::EventType::CDC_CONTROL)
-        onControl(static_cast<CdcControlEvent&>(ued));
-    }
+			/* Advance buffer head. */
+			uint16_t tempRX_Head = (RX_Head + 1) & (BUFSIZE-1);
 
+			/* Check for overflow. */
+			uint16_t tempRX_Tail = RX_Tail;
+			uint8_t data = event.data[i];
 
-    /**
-     * Control event received from the host
-     */
+			if (tempRX_Head == tempRX_Tail) {
+				/* Disable the Receive interrupt */
 
-    void onControl(CdcControlEvent& event) {
+			}else{
+				RX[RX_Head] = data;
+				RX_Head = tempRX_Head;
+			}
+		}
 
-      switch(event.opcode) {
+		usb.beginReceive();
+	}
 
-        /*
-         * We don't process these. They're enumerated here so you can
-         * see what's available.
-         */
 
-        case CdcControlCommand::SEND_ENCAPSULATED_COMMAND:
-        case CdcControlCommand::GET_ENCAPSULATED_RESPONSE:
-        case CdcControlCommand::SET_COMM_FEATURE:
-        case CdcControlCommand::GET_COMM_FEATURE:
-        case CdcControlCommand::CLEAR_COMM_FEATURE:
-        case CdcControlCommand::SET_CONTROL_LINE_STATE:
-        case CdcControlCommand::SEND_BREAK:
-          break;
+	/**
+	 * USB error event received
+	 * @param uee the event descriptor
+	 */
 
-        case CdcControlCommand::SET_LINE_CODING:      // set a new line encoding
-          memcpy(&_lineCoding,event.data,sizeof(_lineCoding));
-          break;
+	void onError(UsbErrorEvent& uee) {
 
-        case CdcControlCommand::GET_LINE_CODING:      // return the current line encoding
-          event.data=reinterpret_cast<uint8_t *>(&_lineCoding);
-          break;
+		// ignore unconfigured errors from the CDC device
 
-        default:
-          break;
-      }
-    }
+		if(uee.provider==ErrorProvider::ERROR_PROVIDER_USB_DEVICE && uee.code==MyUsb::E_UNCONFIGURED)
+			return;
 
+		// flash the RED led on PD2 at 1Hz
 
-    /**
-     * Data received from the host
-     */
+		GpioD<DefaultDigitalOutputFeature<2>> pd;
 
-    void onData(CdcDataReceivedEvent& event) {
-
-      // add character to the message to send
-
-      _message[13]=event.data[0];
-
-      // signal to the main loop that a response is ready
-
-      _loopState=LoopState::REPORT_KEYPRESS;
-    }
-
-
-    /**
-     * USB error event received
-     * @param uee the event descriptor
-     */
-
-    void onError(UsbErrorEvent& uee) {
-
-      // ignore unconfigured errors from the CDC device
-
-      if(uee.provider==ErrorProvider::ERROR_PROVIDER_USB_DEVICE && uee.code==MyUsb::E_UNCONFIGURED)
-        return;
-
-      // flash the RED led on PD2 at 1Hz
-
-      GpioD<DefaultDigitalOutputFeature<2>> pd;
-
-      for(;;) {
-        pd[2].reset();
-        MillisecondTimer::delay(500);
-        pd[2].set();
-        MillisecondTimer::delay(500);
-      }
-    }
+		for(;;) {
+			pd[2].reset();
+			MillisecondTimer::delay(500);
+			pd[2].set();
+			MillisecondTimer::delay(500);
+		}
+	}
 };
 
 
@@ -240,19 +245,24 @@ class UsbDeviceCdcComPortTest {
 
 int main() {
 
-  // initialise the interrupt controller
+	// initialise the interrupt controller
 
-  Nvic::initialise();
+	Nvic::initialise();
 
-  // initialise the millisecond timer
+	// initialise the millisecond timer
 
-  MillisecondTimer::initialise();
+	MillisecondTimer::initialise();
 
-  // run the test
+	// run the test
 
-  UsbDeviceCdcComPortTest test;
-  test.run();
+	UsbDeviceCdcComPort com;
 
-  // not reached
-  return 0;
+	for(;;){
+		if( com.dataAvailable() ){
+			com.send(com.receive());
+		}
+	}
+
+	// not reached
+	return 0;
 }
