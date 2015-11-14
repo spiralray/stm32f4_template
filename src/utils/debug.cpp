@@ -10,7 +10,7 @@
 using namespace stm32plus;
 
 #ifdef DEBUG_PORT
-DebugStream<UsartInterruptWithBuffer<DEBUG_PORT> > debug(115200);
+DebugStream<DEBUG_PORT> debug(115200);
 
 extern "C" void putch(uint8_t data)
 {

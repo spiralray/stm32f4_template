@@ -176,7 +176,7 @@ ifeq ($(EVAL_BOARD),USE_MAIN_V2)
  USE_FATFS_HAL		= USE_SDIO_AS_SDCARD
  STM32PLUS_Fn = STM32PLUS_F407
  
- DEBUG_PORT = "Usart1<Usart1InterruptFeature>"
+ DEBUG_PORT = "UsartInterruptWithBuffer<Usart1<Usart1InterruptFeature>>"
  
 else ifeq ($(EVAL_BOARD),USE_MAIN_V3)
  MPU_CLASS			= STM32F4XX
@@ -189,9 +189,9 @@ else ifeq ($(EVAL_BOARD),USE_MAIN_V3)
  STM32PLUS_Fn = STM32PLUS_F407
  
  #FT232
- #DEBUG_PORT = "Usart2_Remap1<Usart2InterruptFeature>"
+ #DEBUG_PORT = "UsartInterruptWithBuffer<Usart2_Remap1<Usart2InterruptFeature>>"
  #XBee
- DEBUG_PORT = "Usart1_Remap1<Usart1InterruptFeature>"
+ DEBUG_PORT = "UsartInterruptWithBuffer<Usart1_Remap1<Usart1InterruptFeature>>"
  
 else ifeq ($(EVAL_BOARD),USE_STM32F4DISCOVERY)
  MPU_CLASS			= STM32F4XX
@@ -202,7 +202,7 @@ else ifeq ($(EVAL_BOARD),USE_STM32F4DISCOVERY)
  USE_TOUCH_SENCE 	=
  USE_FATFS_HAL		= 
  STM32PLUS_Fn = STM32PLUS_F407
- #DEBUG_PORT = "Usart2<Usart2InterruptFeature>"
+ #DEBUG_PORT = "UsartInterruptWithBuffer<Usart2<Usart2InterruptFeature>>"
  
  else ifeq ($(EVAL_BOARD),USE_STM32F4MINI)
  MPU_CLASS			= STM32F4XX
@@ -213,7 +213,8 @@ else ifeq ($(EVAL_BOARD),USE_STM32F4DISCOVERY)
  USE_TOUCH_SENCE 	=
  USE_FATFS_HAL		= 
  STM32PLUS_Fn = STM32PLUS_F405
- #DEBUG_PORT = "Usart2<Usart2InterruptFeature>"
+ DEBUG_PORT = "UsbDeviceCdcComPort"
+ #DEBUG_PORT = "UsartInterruptWithBuffer<Usart2<Usart2InterruptFeature>>"
  
 else ifeq ($(EVAL_BOARD),USE_32F429IDISCOVERY)
  MPU_CLASS			= STM32F4XX

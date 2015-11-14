@@ -4,6 +4,7 @@
 #include "config/usart.h"
 #include "utils/UsartInterruptWithBuffer.h"
 #include "utils/UsartInterruptOutputStream.h"
+#include "hardware/UsbDeviceCdcComPort.h"
 
 using namespace stm32plus;
 
