@@ -31,6 +31,8 @@ protected:
 	/* @brief Receive buffer tail. */
 	volatile uint16_t RX_Tail;
 
+	bool opened;
+
 public:
 
 	/*
@@ -65,6 +67,8 @@ public:
 	void init(){
 		RX_Tail = 0;
 		RX_Head = 0;
+
+		opened = false;
 
 		// initialise
 
@@ -113,10 +117,12 @@ public:
 
 	bool send(uint8_t data)
 	{
+		if( !opened ) return;
 		usb.transmit(&data,1);
 	}
 
 	void send(char *str){
+		if( !opened ) return;
 		usb.transmit(str,strlen(str));
 	}
 
@@ -173,16 +179,21 @@ public:
 		case CdcControlCommand::SET_COMM_FEATURE:
 		case CdcControlCommand::GET_COMM_FEATURE:
 		case CdcControlCommand::CLEAR_COMM_FEATURE:
-		case CdcControlCommand::SET_CONTROL_LINE_STATE:
 		case CdcControlCommand::SEND_BREAK:
 			break;
 
 		case CdcControlCommand::SET_LINE_CODING:      // set a new line encoding
 			memcpy(&_lineCoding,event.data,sizeof(_lineCoding));
+			opened = true;
 			break;
 
 		case CdcControlCommand::GET_LINE_CODING:      // return the current line encoding
 			event.data=reinterpret_cast<uint8_t *>(&_lineCoding);
+			opened = true;
+			break;
+
+		case CdcControlCommand::SET_CONTROL_LINE_STATE:
+			opened = false;
 			break;
 
 		default:
