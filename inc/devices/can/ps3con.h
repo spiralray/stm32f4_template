@@ -51,7 +51,7 @@ namespace stm32plus {
       }
     }
 
-    void Update(CanRxMsg *RxMessage){
+    void update(CanRxMsg *RxMessage){
 
       if( RxMessage->StdId == 0x321 && RxMessage->DLC == 8 ){
 	  data[0]= *RxMessage;

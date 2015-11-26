@@ -32,7 +32,7 @@ class CanLoop : public CanNode{
     }
 
     void Update(CanRxMsg *RxMessage){
-    	can->Send( (CanTxMsg*)RxMessage );
+    	can->send( (CanTxMsg*)RxMessage );
     }
 
   };
@@ -68,7 +68,7 @@ int main(void)
   mainBoard.can.AddListenerNode(loop);
 
   while(1){
-      mainBoard.can.Update();
+      mainBoard.can.update();
   }
 
   while(1);
