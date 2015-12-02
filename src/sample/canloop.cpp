@@ -24,18 +24,18 @@ using namespace stm32plus;
 /* Defines -------------------------------------------------------------------*/
 
 class CanLoop : public CanNode{
-  protected:
-	CanRoot *can;
-  public:
-	CanLoop( CanRoot *_can ){
-		can = _can;
-    }
+protected:
+  Can *can;
+public:
+  CanLoop( Can *_can ){
+    can = _can;
+  }
 
-    void Update(CanRxMsg *RxMessage){
-    	can->send( (CanTxMsg*)RxMessage );
-    }
+  void update(CanRxMsg *RxMessage){
+    can->send( *(CanTxMsg*)RxMessage );
+  }
 
-  };
+};
 
 /* Variables -----------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ class CanLoop : public CanNode{
 /**************************************************************************/
 /*!
     @brief  Main Program.
-	@param  None.
+    @param  None.
     @retval None.
  */
 /**************************************************************************/
