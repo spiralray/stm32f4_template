@@ -15,9 +15,9 @@ namespace stm32plus{
   class CanAir {
   private:
     CanTxMsg TxMessage;
-    CanRoot *can;
+    Can *can;
   public:
-    CanAir(CanRoot *_can){
+    CanAir(Can *_can){
       can = _can;
 
       TxMessage.StdId = 0x150;
@@ -27,7 +27,7 @@ namespace stm32plus{
       TxMessage.DLC = 1;
       TxMessage.Data[0] = 0x00;
     }
-    CanAir(CanRoot *_can, uint32_t stdid){
+    CanAir(Can *_can, uint32_t stdid){
       can = _can;
 
       TxMessage.StdId = stdid;
@@ -47,7 +47,7 @@ namespace stm32plus{
     }
 
     void Update(){
-      can->Send(&TxMessage);
+      can->send(TxMessage);
     }
 
   };

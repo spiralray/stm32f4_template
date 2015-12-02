@@ -319,7 +319,7 @@ namespace stm32plus {
     Spi5V2 *spi5v2;
     Spi5V3 *spi5v3;
 
-    CanRoot can;
+    CanRoot< Can1_Remap2< Can1InterruptFeature, CanFilterBypassFeature> > can;
 
     Encoders encoders;
 
@@ -347,7 +347,7 @@ namespace stm32plus {
       toggle2(pe[13],true),
       toggle3(pe[14],true),
       toggle4(pe[15],true),
-      can(),
+	  can( { 500000,0.5f } ),
       encoders(),
       mpu6050(I2C::Parameters(100000)) // 100kHz
 #ifndef DEBUG_PORT

@@ -24,18 +24,18 @@ using namespace stm32plus;
 /* Defines -------------------------------------------------------------------*/
 
 class CanLoop : public CanNode{
-  protected:
-	CanRoot *can;
-  public:
-	CanLoop( CanRoot *_can ){
-		can = _can;
-    }
+protected:
+  Can *can;
+public:
+  CanLoop( Can *_can ){
+    can = _can;
+  }
 
-    void Update(CanRxMsg *RxMessage){
-    	can->Send( (CanTxMsg*)RxMessage );
-    }
+  void update(CanRxMsg *RxMessage){
+    can->send( *(CanTxMsg*)RxMessage );
+  }
 
-  };
+};
 
 /* Variables -----------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ class CanLoop : public CanNode{
 /**************************************************************************/
 /*!
     @brief  Main Program.
-	@param  None.
+    @param  None.
     @retval None.
  */
 /**************************************************************************/
@@ -68,7 +68,7 @@ int main(void)
   mainBoard.can.AddListenerNode(loop);
 
   while(1){
-      mainBoard.can.Update();
+      mainBoard.can.update();
   }
 
   while(1);
