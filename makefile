@@ -213,7 +213,7 @@ else ifeq ($(EVAL_BOARD),USE_STM32F4DISCOVERY)
  USE_TOUCH_SENCE 	=
  USE_FATFS_HAL		= 
  STM32PLUS_Fn = STM32PLUS_F405
- DEBUG_PORT = "UsbDeviceCdcComPort"
+ DEBUG_PORT = "UsbDeviceCdcComPort" #Connect PA9 to VBUS
  #DEBUG_PORT = "UsartInterruptWithBuffer<Usart2<Usart2InterruptFeature>>"
  
 else ifeq ($(EVAL_BOARD),USE_32F429IDISCOVERY)
