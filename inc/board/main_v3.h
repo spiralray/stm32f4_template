@@ -347,7 +347,7 @@ namespace stm32plus {
       toggle2(pe[13],true),
       toggle3(pe[14],true),
       toggle4(pe[15],true),
-	  can( { 500000,875 } ),
+	  can( { 500000,0.5f } ),
       encoders(),
       mpu6050(I2C::Parameters(100000)) // 100kHz
 #ifndef DEBUG_PORT
