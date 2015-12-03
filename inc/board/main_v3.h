@@ -319,7 +319,7 @@ namespace stm32plus {
     Spi5V2 *spi5v2;
     Spi5V3 *spi5v3;
 
-    CanRoot< Can1_Remap2< Can1InterruptFeature, CanFilterBypassFeature> > can;
+    CanRoot< Can1_Remap2< Can1InterruptFeature, Can1FilterBypassFeature> > can;
 
     Encoders encoders;
 

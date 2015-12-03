@@ -109,7 +109,7 @@ namespace stm32plus {
     	__disable_irq();
 
     	//ans = (buffer.RX[buffer.RX_Tail]);
-    	memcpy(&ans, &buffer.RX[buffer.RX_Tail], sizeof(CanRxMsg));
+    	memcpy(&ans, (const void*)&buffer.RX[buffer.RX_Tail], sizeof(CanRxMsg));
 
     	/* Advance buffer tail. */
     	buffer.RX_Tail = (buffer.RX_Tail + 1) & (CAN_BUFSIZE-1);
