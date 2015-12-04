@@ -92,7 +92,7 @@ int main(void)
 	RCC_GetClocksFreq(&Clocks);
 
 	//-------------------------------------------------------------------------------------------------Initialize CAN1
-	CanRoot< Can1_Remap1< Can1InterruptFeature, Can1FilterBypassFeature> > can1( { 500000,0.5f } );
+	CanRoot< Can1_Remap1< Can1InterruptFeature, Can1FilterBypassFeature> > can1( { 500000,500 } );
 
 	t1 = ((CAN1->BTR >> 16)& 0x0f) +1;
 	t2 = ((CAN1->BTR >> 20)& 0x0f) +1;
@@ -109,7 +109,7 @@ int main(void)
 	can1.AddListenerNode(loop);
 
 	//-------------------------------------------------------------------------------------------------Initialize CAN2
-	CanRoot< Can2_Remap< Can2InterruptFeature, Can2FilterBypassFeature> > can2( { 500000,0.5f } );
+	CanRoot< Can2_Remap< Can2InterruptFeature, Can2FilterBypassFeature> > can2( { 500000,500 } );
 
 	t1 = ((CAN2->BTR >> 16)& 0x0f) +1;
 	t2 = ((CAN2->BTR >> 20)& 0x0f) +1;
