@@ -40,7 +40,7 @@ public:
 	uint16_t send(uint8_t id, uint16_t angle) {
 		uint8_t txBuff[3] = {0x80|id , (angle>>7) & 0x7f , angle & 0x7f };
 
-		dmaReader->beginRead(rxBuff,3);
+		dmaReader->beginRead(rxBuff,6);
 
 		for(int i=0;i<3;i++){
 			usart->send(txBuff[i]);
