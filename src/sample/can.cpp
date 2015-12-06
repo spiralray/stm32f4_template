@@ -55,7 +55,7 @@ int main(void)
   mainBoard.can.AddListenerNode(ps3con);
 
   while(1){
-      mainBoard.can.Update();
+      mainBoard.can.update();
       if(ps3con->getButtonPress(CROSS)){
 	  debug << "pressed\r\n";
       }
