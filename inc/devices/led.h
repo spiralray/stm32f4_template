@@ -17,8 +17,7 @@ namespace stm32plus{
     GpioPinRef pin;
     bool state;
   public:
-    Led(GpioPinRef _pin){
-      pin = _pin;
+    Led(const GpioPinRef& _pin) : pin(_pin){
       state = false;
       Off();
     }

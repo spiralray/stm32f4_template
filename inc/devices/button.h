@@ -17,8 +17,7 @@ namespace stm32plus{
     GpioPinRef pin;
     bool pushedstate;
   public:
-    Button(GpioPinRef _pin, bool _pushedstate=false){
-      pin = _pin;
+    Button(const GpioPinRef& _pin, bool _pushedstate=false) : pin(_pin){
       pushedstate = _pushedstate;
     }
 
