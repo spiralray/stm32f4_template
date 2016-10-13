@@ -5,18 +5,18 @@
 
 class STM32Hardware {
 
-  //MainV3 FT232 debug port
+  //MainV3 FT232 port
   using SERIAL_CLASS = UsartInterruptWithBuffer<Usart2_Remap1<Usart2InterruptFeature>>;
 
   public:
-  STM32Hardware(SERIAL_CLASS* _com , long baud= 115200){//default 460800
+  STM32Hardware(SERIAL_CLASS* _com , long baud= 460800){
       com = _com;
       baud_ = baud;
     }
     STM32Hardware()
     {
-      com = new SERIAL_CLASS(115200);
-      baud_ = 115200;
+      com = new SERIAL_CLASS(460800);
+      baud_ = 460800;
     }
     STM32Hardware(STM32Hardware& h){
       this->baud_ = h.baud_;
