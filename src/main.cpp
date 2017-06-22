@@ -1,10 +1,11 @@
 /* Includes ------------------------------------------------------------------*/
-#include <stdio.h>
+#include "hw_config.h"
+
 #include "config/stm32plus.h"
-#include "config/gpio.h"
 #include "config/timing.h"
 
-#include "board/main_v3.h"
+#include "board/f4discovery.h"
+
 
 using namespace stm32plus;
 
@@ -19,27 +20,39 @@ using namespace stm32plus;
 /* Functions -----------------------------------------------------------------*/
 
 /**************************************************************************/
-/*
+/*!
     @brief  Main Program.
-	@param  None.
+    @param  None.
     @retval None.
  */
 /**************************************************************************/
 int main(void)
 {
+
   //Initialise Systick
   MillisecondTimer::initialise();
 
-  MainV3 board;
+  Nvic::initialise();
+
+  MillisecondTimer::delay(100);
+
+  F4Discovery board;
 
   while(1){
+      board.led1.On();
+      board.led2.On();
+      board.led3.Off();
+      board.led4.Off();
       MillisecondTimer::delay(500);
-      board.led.On();
+      board.led1.Off();
+      board.led2.Off();
+      board.led3.On();
+      board.led4.On();
       MillisecondTimer::delay(500);
-      board.led.Off();
   }
+
+  return 0;
 
 }
 
 /* End Of File ---------------------------------------------------------------*/
-
